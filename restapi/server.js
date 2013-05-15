@@ -14,6 +14,7 @@ server.use(restify.fullResponse())
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
+server.get('/v1/users/:id', resources.v1.users.get)
 
 // Start server
 server.listen(config.restapi.port, function() {

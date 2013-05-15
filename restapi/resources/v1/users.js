@@ -76,4 +76,28 @@ exports.post = function(req, res) {
     res.send(400, 'Unknown sign-in method used.')
   }
 
-}
+} // END function - exports.post
+
+exports.get = function(req, res) {
+
+  var handleFindUser = function(err, user) {
+    
+    if (!user) {
+      res.send(404, 'User not found.')
+      return
+    }
+
+    res.send(200, user.asJson())
+    
+  } // END function - handleFindUser
+  
+  // Flag error if user ID is not provided
+  if (!req.params.id) {
+    res.send(400, 'Please provide user ID')
+    return
+  }
+
+  var userId = req.params.id
+  User.findById(userId, handleFindUser)
+
+} // END function - exports.get
