@@ -2,78 +2,65 @@ var mongoose = require('mongoose'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
 
-var handleUnknownBody = function(req, res, body) {
+exports.post = function(req, res) {
 
-  res.send(400, 'Unknown sign in method used.')
+  var handleTwitterSignIn = function(twitter) {
 
-}
+    var handleCreateUser = function(err, user) {
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not create user.')
+        return
+      }
+      res.send(201, user.asJson())
 
-var handleTwitterSignIn = function(req, res, twitter) {
+    } // END function - handleCreateUser
 
-  var sendUserResponse = function(code, user) {
-    res.send(code, {
-      id: user._id,
-      username: user.username
-    })
-  } // END function - sendUserResponse
-  
-  var handleCreateUser = function(err, user) {
-    if (err) {
-      console.error(err)
-      res.send(500, 'Could not create user.')
-      return
-    }
-    sendUserResponse(201, user)
+    var handleUpdateUser = function(err, user) {
+      
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not update user.')
+        return
+      }
+      res.send(200, user.asJson())
 
-  } // END function - handleCreateUser
+    } // END function - handleUpdateUser
 
-  var handleUpdateUser = function(err, user) {
-    
-    if (err) {
-      console.error(err)
-      res.send(500, 'Could not update user.')
-      return
-    }
-    sendUserResponse(200, user)
+    var handleFindUser = function(err, user) {
+      
+      if (err) {
+        console.error(err)
+        res.send(500, 'Error finding user with Twitter ID.')
+        return
+      }
+      
+      if (!user) {
+        var u = new User({
+          username: twitter.screen_name,
+          twitter_id: twitter.user_id,
+          twitter_credentials: {
+            access_token: twitter.oauth_token,
+            token_secret: twitter.oauth_token_secret
+          }
+        })
+        u.save(handleCreateUser)
 
-  } // END function - handleUpdateUser
-
-  var handleFindUser = function(err, user) {
-    
-    if (err) {
-      console.error(err)
-      res.send(500, 'Error finding user with Twitter ID.')
-      return
-    }
-    
-    if (!user) {
-      var u = new User({
-        username: twitter.screen_name,
-        twitter_id: twitter.user_id,
-        twitter_credentials: {
+      } else {
+        user.username = twitter.screen_name,
+        user.twitter_credentials = { 
           access_token: twitter.oauth_token,
           token_secret: twitter.oauth_token_secret
         }
-      })
-      u.save(handleCreateUser)
-
-    } else {
-      user.username = twitter.screen_name,
-      user.twitter_credentials = { 
-        access_token: twitter.oauth_token,
-        token_secret: twitter.oauth_token_secret
+        user.save(handleUpdateUser)
       }
-      user.save(handleUpdateUser)
-    }
 
-  } // END function - handleFindUser
-  
-  // Try to find user with twitter ID
-  User.findOne({ twitter_id: twitter.user_id }, handleFindUser)
+    } // END function - handleFindUser
+    
+    // Try to find user with twitter ID
+    User.findOne({ twitter_id: twitter.user_id }, handleFindUser)
 
-}
-
-exports.post = function(req, res) {
+  } // END function - handleTwitterSignIn
 
   var body
   try {
@@ -84,9 +71,9 @@ exports.post = function(req, res) {
   }
 
   if (body.hasOwnProperty('twitter')) {
-    handleTwitterSignIn(req, res, body.twitter)
+    handleTwitterSignIn(body.twitter)
   } else {
-    handleUnknownBody(req, res, body)
+    res.send(400, 'Unknown sign-in method used.')
   }
 
 }
