@@ -8,7 +8,6 @@ module.exports = {
   },
   twitter: {
     oauth_consumer_key: process.env.TWITTER_OAUTH_CONSUMER_KEY,
-    oauth_consumer_secret: process.env.TWITTER_OAUTH_CONSUMER_SECRET,
-    api_baseuri: 'https://api.twitter.com/1.1/'
+    oauth_consumer_secret: process.env.TWITTER_OAUTH_CONSUMER_SECRET
   }
 }

@@ -1,11 +1,13 @@
 var mongoose = require('mongoose'),
+    config = require('config'),
     uuid = require('uuid'),
+    twitter = require('twitter'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
 
 exports.post = function(req, res) {
 
-  var handleTwitterSignIn = function(twitter) {
+  var handleTwitterSignIn = function(twitterCredentials) {
 
     var handleCreateUser = function(err, user) {
       if (err) {
@@ -38,21 +40,21 @@ exports.post = function(req, res) {
       
       if (!user) {
         var u = new User({
-          username: twitter.screen_name,
-          twitter_id: twitter.user_id,
+          username: twitterCredentials.screen_name,
+          twitter_id: twitterCredentials.user_id,
           twitter_credentials: {
-            access_token: twitter.oauth_token,
-            token_secret: twitter.oauth_token_secret
+            access_token: twitterCredentials.oauth_token,
+            token_secret: twitterCredentials.oauth_token_secret
           },
           login_token: uuid.v1()
         })
         u.save(handleCreateUser)
 
       } else {
-        user.username = twitter.screen_name,
+        user.username = twitterCredentials.screen_name,
         user.twitter_credentials = { 
-          access_token: twitter.oauth_token,
-          token_secret: twitter.oauth_token_secret
+          access_token: twitterCredentials.oauth_token,
+          token_secret: twitterCredentials.oauth_token_secret
         }
         user.login_token = uuid.v1()
         user.save(handleUpdateUser)
@@ -61,7 +63,7 @@ exports.post = function(req, res) {
     } // END function - handleFindUser
     
     // Try to find user with twitter ID
-    User.findOne({ twitter_id: twitter.user_id }, handleFindUser)
+    User.findOne({ twitter_id: twitterCredentials.user_id }, handleFindUser)
 
   } // END function - handleTwitterSignIn
 
@@ -93,9 +95,23 @@ exports.get = function(req, res) {
       return
     }
 
-    // TODO: Fetch user profile URI from Twitter API
+    var twitterApiClient = new twitter({
+      consumer_key: config.twitter.oauth_consumer_key,
+      consumer_secret: config.twitter.oauth_consumer_secret,
+      access_token_key: user.twitter_credentials.access_token,
+      access_token_secret: user.twitter_credentials.token_secret
+    })
 
-    res.send(200, user.asJson())
+    var handleFetchUserProfileFromTwitter = function(data) {
+    
+      var userJson = user.asJson()
+      userJson.profile_image_uri = data.profile_image_url
+
+      res.send(200, userJson)
+
+    } // END function - handleFetchUserProfileFromTwitter
+    
+    twitterApiClient.get('/users/show.json', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
     
   } // END function - handleFindUser
   
