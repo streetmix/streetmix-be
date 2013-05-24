@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+    uuid = require('uuid'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
 
@@ -12,7 +13,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not create user.')
         return
       }
-      res.send(201, user.asJson())
+      res.send(201, { login_token: user.login_token })
 
     } // END function - handleCreateUser
 
@@ -23,7 +24,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not update user.')
         return
       }
-      res.send(200, user.asJson())
+      res.send(200, { login_token: user.login_token })
 
     } // END function - handleUpdateUser
 
@@ -42,7 +43,8 @@ exports.post = function(req, res) {
           twitter_credentials: {
             access_token: twitter.oauth_token,
             token_secret: twitter.oauth_token_secret
-          }
+          },
+          login_token: uuid.v1()
         })
         u.save(handleCreateUser)
 
@@ -52,6 +54,7 @@ exports.post = function(req, res) {
           access_token: twitter.oauth_token,
           token_secret: twitter.oauth_token_secret
         }
+        user.login_token = uuid.v1()
         user.save(handleUpdateUser)
       }
 

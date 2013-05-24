@@ -6,7 +6,9 @@
     "config": "0.4.22",
     "requireindex": "1.0.0",
     "restify": "2.3.5",
-    "mongoose": "3.6.8"
+    "mongoose": "3.6.8",
+    "twitter": "0.1.x",
+    "uuid": "1.4.x"
   },
   "engines": {
     "node": "0.10.x",
