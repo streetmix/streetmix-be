@@ -7,7 +7,9 @@ REST API for the [Streetmix](http://streetmix.net) application
 
 --
 User Authentication Resources
+--
 
+Sign-in a user, creating one if necessary.
 POST /users
 > Content-Type: application/json
 > Accept: application/json
@@ -24,3 +26,7 @@ POST /users
 {
   "login_token": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
 }
+
+Sign-out a user.
+DELETE /users/906f7180-c4ba-11e2-8b8b-0800200c9a66/login_token
+< 204
