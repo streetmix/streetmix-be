@@ -74,6 +74,9 @@ exports.post = function(req, res) {
   }
 
   if (body.hasOwnProperty('twitter')) {
+
+    // TODO: Validation
+
     handleTwitterSignIn(body.twitter)
   } else {
     res.send(400, 'Unknown sign-in method used.')
@@ -89,6 +92,8 @@ exports.get = function(req, res) {
       res.send(404, 'User not found.')
       return
     }
+
+    // TODO: Fetch user profile URI from Twitter API
 
     res.send(200, user.asJson())
     
