@@ -95,12 +95,12 @@ exports.get = function(req, res) {
   } // END function - handleFindUser
   
   // Flag error if user ID is not provided
-  if (!req.params.id) {
-    res.send(400, 'Please provide user ID')
+  if (!req.params.login_token) {
+    res.send(400, 'Please provide login token')
     return
   }
 
-  var userId = req.params.id
-  User.findById(userId, handleFindUser)
+  var loginToken = req.params.login_token
+  User.findOne({ login_token: loginToken }, handleFindUser)
 
 } // END function - exports.get
