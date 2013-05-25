@@ -1,4 +1,4 @@
-HOST: http://localhost:8080/v1
+HOST: http://streetmix-api-staging.herokuapp.com/v1
 
 --- Streetmix REST API
 ---
@@ -36,7 +36,7 @@ DELETE /users/{login_token}/login-token
 User Resources
 --
 
-User information
+Retrieve a user's information.
 GET /users/{login_token}
 > Accept: application/json
 < 200
@@ -44,3 +44,27 @@ GET /users/{login_token}
     "username": "shaunak",
     "profile_image_uri" "http://a0.twimg.com/profile_images/1777569006/image1327396628_normal.png"
 }
+
+--
+Street Resources
+--
+
+Create a new street.
+POST /streets
+> Accept: application/json
+< 201
+< Content-Type: application/json
+< Location: /streets/{id}
+{
+  "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
+}
+
+Update an existing street.
+PUT /streets/{id}
+> Accept: application/json
+> Content-Type: application/json
+{
+  "name": "Haight St.",
+  "data": ...
+}
+< 200
