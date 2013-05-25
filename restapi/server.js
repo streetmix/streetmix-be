@@ -1,6 +1,7 @@
 var config = require('config'),
     restify = require('restify'),
-    resources = require(__dirname + '/resources')
+    resources = require(__dirname + '/resources'),
+    util = require(__dirname + '/lib/util.js')
 
 // Define server
 var server = restify.createServer({
@@ -8,9 +9,15 @@ var server = restify.createServer({
   version: '0.0.1'
 })
 
+var loginTokenParser = function(req, res, next) {
+  req.params.loginToken = util.parseLoginToken(req)
+  next()
+}
+
 server.use(restify.bodyParser())
 server.use(restify.CORS())
 server.use(restify.fullResponse())
+server.use(loginTokenParser)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)

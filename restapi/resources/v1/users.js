@@ -4,7 +4,6 @@ var mongoose = require('mongoose'),
     twitter = require('twitter'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
-    util = require('../../lib/util.js')
 
 exports.post = function(req, res) {
 
@@ -152,8 +151,7 @@ exports.delete = function(req, res) {
       return
     }
 
-    var loginToken = util.getLoginToken(req)
-    if (user.login_token != loginToken) {
+    if (user.login_token != req.params.loginToken) {
       res.send(401)
       return
     }

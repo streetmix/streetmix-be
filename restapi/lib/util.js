@@ -1,4 +1,4 @@
-exports.getLoginToken = function(req) {
+exports.parseLoginToken = function(req) {
 
   var authHeader = req.header('Authorization')
 
