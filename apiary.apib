@@ -15,20 +15,20 @@ POST /users
 > Accept: application/json
 {
   "twitter": {
-    "user_id": 8254163,
-    "screen_name": "shaunak",
-    "oauth_token": "fdy36ydgsjw0263bhd73181bdbe630eh033g28e=",
-    "oauth_token_secret": "ue63tsbvjc92nvmdt268fnc0209e03yenc9371v383gr61u83r"
+    "userId": 8254163,
+    "screenName": "shaunak",
+    "oauthAccessToken": "fdy36ydgsjw0263bhd73181bdbe630eh033g28e=",
+    "oauthAccessTokenSecret": "ue63tsbvjc92nvmdt268fnc0209e03yenc9371v383gr61u83r"
   }
 }
 < 201
 < Content-Type: application/json
 {
-  "login_token": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
+  "loginToken": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
 }
 
 Sign-out a user.
-DELETE /users/{login_token}/login-token
+DELETE /users/{login-token}/login-token
 < 204
 
 
@@ -37,12 +37,12 @@ User Resources
 --
 
 Retrieve a user's information.
-GET /users/{login_token}
+GET /users/{login-token}
 > Accept: application/json
 < 200
 {
     "username": "shaunak",
-    "profile_image_uri" "http://a0.twimg.com/profile_images/1777569006/image1327396628_normal.png"
+    "profileImageUri" "http://a0.twimg.com/profile_images/1777569006/image1327396628_normal.png"
 }
 
 --
@@ -59,7 +59,7 @@ POST /streets
   "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
 }
 
-Update an existing street.
+**[NOT YET IMPLEMENTED]** Update an existing street.
 PUT /streets/{id}
 > Accept: application/json
 > Content-Type: application/json
