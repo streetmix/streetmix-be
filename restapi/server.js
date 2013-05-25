@@ -15,6 +15,8 @@ server.use(restify.fullResponse())
 // Routes
 server.post('/v1/users', resources.v1.users.post)
 server.get('/v1/users/:login_token', resources.v1.users.get)
+server.del('/v1/users/:login_token/login-token', resources.v1.users.delete)
+
 server.post('/v1/streets', resources.v1.streets.post)
 
 // Start server

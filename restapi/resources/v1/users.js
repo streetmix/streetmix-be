@@ -125,3 +125,33 @@ exports.get = function(req, res) {
   User.findOne({ login_token: loginToken }, handleFindUser)
 
 } // END function - exports.get
+
+exports.delete = function(req, res) {
+
+  var handleSaveUser = function(err, user) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not sign-out user.')
+      return
+    }
+    res.send(204)
+
+  } // END function - handleSaveUser
+
+  var handleFindUser = function(err, user) {
+
+    if (!user) {
+      res.send(404, 'User not found.')
+      return
+    }
+
+    user.login_token = null
+    user.save(handleSaveUser)
+
+  } // END function - handleFindUser
+
+  var loginToken = req.params.login_token
+  User.findOne({ login_token: loginToken }, handleFindUser)
+
+} // END function - exports.delete
