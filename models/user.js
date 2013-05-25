@@ -11,7 +11,7 @@ var userSchema = new mongoose.Schema({
 userSchema.methods.asJson = function() {
   return {
     username: this.username,
-    profile_image_uri: this.profile_image_uri
+    profileImageUri: this.profile_image_uri
   }
 }
 

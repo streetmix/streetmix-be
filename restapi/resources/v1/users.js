@@ -15,7 +15,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not create user.')
         return
       }
-      res.send(201, { login_token: user.login_token })
+      res.send(201, { loginToken: user.login_token })
 
     } // END function - handleCreateUser
 
@@ -26,7 +26,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not update user.')
         return
       }
-      res.send(200, { login_token: user.login_token })
+      res.send(200, { loginToken: user.login_token })
 
     } // END function - handleUpdateUser
 
