@@ -15,7 +15,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not create user.')
         return
       }
-      res.send(201, { loginToken: user.login_token })
+      res.send(201, { id: user.id, loginToken: user.login_token })
 
     } // END function - handleCreateUser
 
@@ -26,7 +26,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not update user.')
         return
       }
-      res.send(200, { loginToken: user.login_token })
+      res.send(200, { id: user.id, loginToken: user.login_token })
 
     } // END function - handleUpdateUser
 
@@ -40,8 +40,9 @@ exports.post = function(req, res) {
       
       if (!user) {
         var u = new User({
-          username: twitterCredentials.screen_name,
-          twitter_id: twitterCredentials.user_id,
+          id: uuid.v1(),
+          username: twitterCredentials.screenName,
+          twitter_id: twitterCredentials.userId,
           twitter_credentials: {
             access_token_key: twitterCredentials.oauthAccessTokenKey,
             access_token_secret: twitterCredentials.oauthAccessTokenSecret
@@ -51,7 +52,7 @@ exports.post = function(req, res) {
         u.save(handleCreateUser)
 
       } else {
-        user.username = twitterCredentials.screen_name,
+        user.username = twitterCredentials.screenName,
         user.twitter_credentials = { 
           access_token_key: twitterCredentials.oauthAccessTokenKey,
           access_token_secret: twitterCredentials.oauthAccessTokenSecret
@@ -63,7 +64,7 @@ exports.post = function(req, res) {
     } // END function - handleFindUser
     
     // Try to find user with twitter ID
-    User.findOne({ twitter_id: twitterCredentials.user_id }, handleFindUser)
+    User.findOne({ twitter_id: twitterCredentials.userId }, handleFindUser)
 
   } // END function - handleTwitterSignIn
 
