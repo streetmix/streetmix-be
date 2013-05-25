@@ -43,8 +43,8 @@ exports.post = function(req, res) {
           username: twitterCredentials.screen_name,
           twitter_id: twitterCredentials.user_id,
           twitter_credentials: {
-            access_token: twitterCredentials.oauth_token,
-            token_secret: twitterCredentials.oauth_token_secret
+            access_token_key: twitterCredentials.oauthAccessTokenKey,
+            access_token_secret: twitterCredentials.oauthAccessTokenSecret
           },
           login_token: uuid.v1()
         })
@@ -53,8 +53,8 @@ exports.post = function(req, res) {
       } else {
         user.username = twitterCredentials.screen_name,
         user.twitter_credentials = { 
-          access_token: twitterCredentials.oauth_token,
-          token_secret: twitterCredentials.oauth_token_secret
+          access_token_key: twitterCredentials.oauthAccessTokenKey,
+          access_token_secret: twitterCredentials.oauthAccessTokenSecret
         }
         user.login_token = uuid.v1()
         user.save(handleUpdateUser)
@@ -98,8 +98,8 @@ exports.get = function(req, res) {
     var twitterApiClient = new twitter({
       consumer_key: config.twitter.oauth_consumer_key,
       consumer_secret: config.twitter.oauth_consumer_secret,
-      access_token_key: user.twitter_credentials.access_token,
-      access_token_secret: user.twitter_credentials.token_secret
+      access_token_key: user.twitter_credentials.access_token_key,
+      access_token_secret: user.twitter_credentials.access_token_secret
     })
 
     var handleFetchUserProfileFromTwitter = function(data) {
