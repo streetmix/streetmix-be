@@ -2,7 +2,7 @@ var mongoose = require('mongoose'),
     userSchema = require('./user.js').schema
 
 var streetSchema = new mongoose.Schema({
-  id: String,
+  id: { type: String, index: { unique: true } },
   name: String,
   creatorId: { type: mongoose.Schema.ObjectId, ref: mongoose.model('User')},
   data: mongoose.Schema.Types.Mixed
