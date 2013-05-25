@@ -70,8 +70,8 @@ exports.post = function(req, res) {
 
   } // END function - handleFindUser
 
-  if (body && body.creatorId) {
-    User.findById(body.creatorId, handleFindUser)
+  if (req.params.loginToken) {
+    User.findOne({ login_token: req.params.loginToken }, handleFindUser)
   } else {
     saveStreet()
   }    
