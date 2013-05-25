@@ -105,7 +105,7 @@ exports.get = function(req, res) {
     var handleFetchUserProfileFromTwitter = function(data) {
     
       var userJson = user.asJson()
-      userJson.profile_image_uri = data.profile_image_url
+      userJson.profileImageUrl = data.profile_image_url
 
       res.send(200, userJson)
 
