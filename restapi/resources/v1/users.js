@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
     twitter = require('twitter'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
+    util = require('../../lib/util.js')
 
 exports.post = function(req, res) {
 
@@ -151,12 +152,24 @@ exports.delete = function(req, res) {
       return
     }
 
+    var loginToken = util.getLoginToken(req)
+    if (user.login_token != loginToken) {
+      res.send(401)
+      return
+    }
+
     user.login_token = null
     user.save(handleSaveUser)
 
   } // END function - handleFindUser
 
-  var loginToken = req.params.login_token
-  User.findOne({ login_token: loginToken }, handleFindUser)
+  // Flag error if user ID is not provided
+  if (!req.params.user_id) {
+    res.send(400, 'Please provide user ID.')
+    return
+  }
+
+  var userId = req.params.user_id
+  User.findOne({ id: userId }, handleFindUser)
 
 } // END function - exports.delete
