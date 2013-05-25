@@ -22,13 +22,16 @@ POST /users
   }
 }
 < 201
+< Location: /users/{id}
 < Content-Type: application/json
 {
+  "id": "9cc211c0-c561-11e2-8b8b-0800200c9a66",
   "loginToken": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
 }
 
 Sign-out a user.
-DELETE /users/{login-token}/login-token
+DELETE /users/{id}/login-token
+> Authorization: Streetmix realm="" loginToken="{login-token}"
 < 204
 
 
@@ -37,12 +40,14 @@ User Resources
 --
 
 Retrieve a user's information.
-GET /users/{login-token}
+GET /users/{id}
+> Authorization: Streetmix realm="" loginToken="{login-token}"
 > Accept: application/json
 < 200
 {
-    "username": "shaunak",
-    "profileImageUri" "http://a0.twimg.com/profile_images/1777569006/image1327396628_normal.png"
+  "id": "9cc211c0-c561-11e2-8b8b-0800200c9a66",
+  "username": "shaunak",
+  "profileImageUri" "http://a0.twimg.com/profile_images/1777569006/image1327396628_normal.png"
 }
 
 --
@@ -51,16 +56,19 @@ Street Resources
 
 Create a new street.
 POST /streets
+> Authorization: Streetmix realm="" loginToken="{login-token}"
 > Accept: application/json
 < 201
 < Content-Type: application/json
 < Location: /streets/{id}
 {
-  "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66"
+  "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66",
+  "creatorId": "9cc211c0-c561-11e2-8b8b-0800200c9a66"
 }
 
 **[NOT YET IMPLEMENTED]** Update an existing street.
 PUT /streets/{id}
+> Authorization: Streetmix realm="" loginToken="{login-token}"
 > Accept: application/json
 > Content-Type: application/json
 {
