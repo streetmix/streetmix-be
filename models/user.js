@@ -2,7 +2,6 @@ var mongoose = require('mongoose')
 
 var userSchema = new mongoose.Schema({
   username: { type: String, index: { unique: true } },
-  profile_image_uri: String,
   twitter_id: String,
   twitter_credentials: mongoose.Schema.Types.Mixed,
   login_token: { type: String, index: { unique: true } }
@@ -10,8 +9,7 @@ var userSchema = new mongoose.Schema({
 
 userSchema.methods.asJson = function() {
   return {
-    username: this.username,
-    profileImageUri: this.profile_image_uri
+    username: this.username
   }
 }
 
