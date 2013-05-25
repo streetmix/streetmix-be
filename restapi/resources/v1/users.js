@@ -94,7 +94,7 @@ exports.post = function(req, res) {
 exports.get = function(req, res) {
 
   var handleFindUser = function(err, user) {
-    
+   
     if (!user) {
       res.send(404, 'User not found.')
       return
@@ -121,13 +121,13 @@ exports.get = function(req, res) {
   } // END function - handleFindUser
   
   // Flag error if user ID is not provided
-  if (!req.params.login_token) {
-    res.send(400, 'Please provide login token')
+  if (!req.params.user_id) {
+    res.send(400, 'Please provide user ID.')
     return
   }
 
-  var loginToken = req.params.login_token
-  User.findOne({ login_token: loginToken }, handleFindUser)
+  var userId = req.params.user_id
+  User.findOne({ id: userId }, handleFindUser)
 
 } // END function - exports.get
 
