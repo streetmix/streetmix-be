@@ -2,6 +2,7 @@ var mongoose = require('mongoose'),
     userSchema = require('./user.js').schema
 
 var streetSchema = new mongoose.Schema({
+  id: String,
   name: String,
   creatorId: { type: mongoose.Schema.ObjectId, ref: mongoose.model('User')},
   data: mongoose.Schema.Types.Mixed
@@ -12,20 +13,13 @@ streetSchema.add({
 })
 
 streetSchema.methods.asJson = function() {
-  var json = {
-    id: this._id,
-    data: this.data
+  return {
+    id: this.id,
+    name: this.name,
+    data: this.data,
+    creatorId: this.creatorId,
+    originalStreetId: this.originalStreetId
   }
-
-  if (this.creatorId) {
-    json.creatorId = this.creatorId
-  }
-
-  if (this.originalStreetId) {
-    json.originalStreetId = this.originalStreetId
-  }
-
-  return json
 }
     
 
