@@ -9,6 +9,8 @@ exports.post = function(req, res) {
 
   var handleTwitterSignIn = function(twitterCredentials) {
 
+    // TODO: Call Twitter API with OAuth access credentials to make sure they are valid
+
     var handleCreateUser = function(err, user) {
       if (err) {
         console.error(err)
