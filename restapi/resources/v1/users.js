@@ -17,6 +17,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not create user.')
         return
       }
+      res.header('Location', config.restapi.baseuri + '/v1/users/' + user.id)
       res.send(201, { id: user.id, loginToken: user.login_token })
 
     } // END function - handleCreateUser
@@ -28,6 +29,7 @@ exports.post = function(req, res) {
         res.send(500, 'Could not update user.')
         return
       }
+      res.header('Location', config.restapi.baseuri + '/v1/users/' + user.id)
       res.send(200, { id: user.id, loginToken: user.login_token })
 
     } // END function - handleUpdateUser
