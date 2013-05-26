@@ -9,11 +9,37 @@ var server = restify.createServer({
   version: '0.0.1'
 })
 
+var requestLog = function(req, res, next) {
+  console.log('[ ' + new Date() + ' ] ' + req.method + ' ' + req.url)
+  next()
+}
+
 var loginTokenParser = function(req, res, next) {
   req.params.loginToken = util.parseLoginToken(req)
   next()
 }
 
+var unknownMethodHandler = function(req, res) {
+  if (req.method.toLowerCase() === 'options') {
+    var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization']
+
+    if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS')
+    
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Headers', allowHeaders.join(', '))
+    res.header('Access-Control-Allow-Methods', res.methods.join(', '))
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    
+    return res.send(204)
+  }
+  else
+    return res.send(new restify.MethodNotAllowedError())
+}
+
+server.on('MethodNotAllowed', requestLog)
+server.on('MethodNotAllowed', unknownMethodHandler)
+
+server.use(requestLog)
 server.use(restify.bodyParser())
 server.use(restify.CORS())
 server.use(restify.fullResponse())
