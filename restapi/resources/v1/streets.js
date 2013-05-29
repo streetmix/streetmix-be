@@ -43,7 +43,7 @@ exports.post = function(req, res) {
       return
     }
 
-    street.originalStreetId = origStreet
+    street.original_street_id = origStreet
 
     street.save(handleCreateStreet)
 
