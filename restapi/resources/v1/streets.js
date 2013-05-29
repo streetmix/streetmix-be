@@ -33,6 +33,7 @@ exports.post = function(req, res) {
     }
     res.header('Location', config.restapi.baseuri + '/v1/streets/' + s.id)
     res.send(201, s.asJson())
+
   } // END function - handleCreateStreet
 
   var handleFindStreet = function(err, origStreet) {
@@ -76,5 +77,66 @@ exports.post = function(req, res) {
     saveStreet()
   }    
 
-
 } // END function - exports.post
+
+exports.delete = function(req, res) {
+
+  var handleFindStreet = function(err, street) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not find street.')
+      return
+    }
+
+    if (!street) {
+      res.send(404, 'Could not find street.')
+      return
+    }
+
+    var handleFindUser = function(err, user) {
+
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not find signed-in user.')
+        return
+      }
+      
+      if (!user) {
+        res.send(401, 'User is not signed-in.')
+        return
+      }
+
+      if (!street.creatorId) {
+        res.send(403, 'Signed-in user cannot delete this street.')
+        return
+      }
+
+      if (street.creatorId.toString() !== user._id.toString()) {
+        res.send(403, 'Signed-in user cannot delete this street.')
+        return
+      }
+      
+      street.remove()
+      res.send(204)
+
+    } // END function - handleFindUser
+
+    User.findOne({ login_token: req.params.loginToken }, handleFindUser)
+
+  } // END function - handleFindStreet
+
+  if (!req.params.loginToken) {
+    res.send(401)
+    return
+  }
+
+  if (!req.params.street_id) {
+    res.send(400, 'Please provide street ID.')
+    return
+  }
+
+  Street.findOne({ id: req.params.street_id }, handleFindStreet)
+
+} // END function - exports.delete
+
