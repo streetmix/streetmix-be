@@ -10,14 +10,15 @@ var server = restify.createServer({
 })
 
 var requestLog = function(req, res, next) {
-  console.log('[ ' + new Date() + ' ] ' + req.method + ' ' + req.url)
+  var requestParams = req.params || {}
+  console.log('[ %s ] %s %s %j', new Date(), req.method, req.url, requestParams)
   next()
 }
 
 var loginTokenParser = function(req, res, next) {
   req.params.loginToken = util.parseLoginToken(req)
   next()
-}
+} // END function - loginTokenParser
 
 var unknownMethodHandler = function(req, res) {
   if (req.method.toLowerCase() === 'options') {
@@ -39,11 +40,11 @@ var unknownMethodHandler = function(req, res) {
 server.on('MethodNotAllowed', requestLog)
 server.on('MethodNotAllowed', unknownMethodHandler)
 
-server.use(requestLog)
 server.use(restify.bodyParser())
 server.use(restify.CORS())
 server.use(restify.fullResponse())
 server.use(loginTokenParser)
+server.use(requestLog)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
