@@ -50,6 +50,7 @@ server.use(requestLog)
 server.post('/v1/users', resources.v1.users.post)
 server.get('/v1/users/:user_id', resources.v1.users.get)
 server.del('/v1/users/:user_id/login-token', resources.v1.users.delete)
+server.get('/v1/users/:user_id/streets', resources.v1.users_streets.get)
 
 server.post('/v1/streets', resources.v1.streets.post)
 server.del('/v1/streets/:street_id', resources.v1.streets.delete)
