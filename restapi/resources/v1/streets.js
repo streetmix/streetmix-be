@@ -140,3 +140,30 @@ exports.delete = function(req, res) {
 
 } // END function - exports.delete
 
+exports.get = function(req, res) {
+
+  var handleFindStreet = function(err, street) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not find street.')
+      return
+    }
+
+    if (!street) {
+      res.send(404, 'Could not find street.')
+      return
+    }
+
+    res.send(200, street.asJson())
+    
+  } // END function - handleFindStreet
+
+  if (!req.params.street_id) {
+    res.send(400, 'Please provide street ID.')
+    return
+  }
+
+  Street.findOne({ id: req.params.street_id }, handleFindStreet)
+
+} // END function - exports.get
