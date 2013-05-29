@@ -66,7 +66,7 @@ exports.post = function(req, res) {
       return
     }
     
-    street.creatorId = user
+    street.creator_id = user
     saveStreet()
 
   } // END function - handleFindUser
@@ -107,12 +107,12 @@ exports.delete = function(req, res) {
         return
       }
 
-      if (!street.creatorId) {
+      if (!street.creator_id) {
         res.send(403, 'Signed-in user cannot delete this street.')
         return
       }
 
-      if (street.creatorId.toString() !== user._id.toString()) {
+      if (street.creator_id.toString() !== user._id.toString()) {
         res.send(403, 'Signed-in user cannot delete this street.')
         return
       }

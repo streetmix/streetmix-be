@@ -32,7 +32,7 @@ exports.get = function(req, res) {
 
     } // END function - handleFindStreets
 
-    Street.find({ creatorId: user._id }, handleFindStreets)
+    Street.find({ creator_id: user._id }, handleFindStreets)
 
   } // END function - handleFindUser
 

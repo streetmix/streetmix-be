@@ -4,12 +4,12 @@ var mongoose = require('mongoose'),
 var streetSchema = new mongoose.Schema({
   id: { type: String, index: { unique: true } },
   name: String,
-  creatorId: { type: mongoose.Schema.ObjectId, ref: mongoose.model('User')},
+  creator_id: { type: mongoose.Schema.ObjectId, ref: mongoose.model('User')},
   data: mongoose.Schema.Types.Mixed
 })
 
 streetSchema.add({
-  originalStreetId: { type: mongoose.Schema.ObjectId, ref: streetSchema},
+  original_street_id: { type: mongoose.Schema.ObjectId, ref: streetSchema},
 })
 
 streetSchema.methods.asJson = function() {
@@ -17,8 +17,8 @@ streetSchema.methods.asJson = function() {
     id: this.id,
     name: this.name,
     data: this.data,
-    creatorId: this.creatorId,
-    originalStreetId: this.originalStreetId
+    creatorId: this.creator_id,
+    originalStreetId: this.original_street_id
   }
 }
     
