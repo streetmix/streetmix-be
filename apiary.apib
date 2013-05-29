@@ -63,8 +63,27 @@ POST /streets
 < Location: /streets/{id}
 {
   "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66",
-  "creatorId": "9cc211c0-c561-11e2-8b8b-0800200c9a66"
+  "creatorId": "9cc211c0-c561-11e2-8b8b-0800200c9a66",
+  "name": "Haight St.",
+  "data": ...
 }
+
+Retrieve a street.
+GET /streets/{id}
+> Accept: application/json
+< 200
+{
+  "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66",
+  "creatorId": "9cc211c0-c561-11e2-8b8b-0800200c9a66",
+  "name": "Haight St.",
+  "data": ...
+}
+
+Delete a street.
+DELETE /streets/{id}
+> Authorization: Streetmix realm="" loginToken="{login-token}"
+< 204
+
 
 **[NOT YET IMPLEMENTED]** Update an existing street.
 PUT /streets/{id}
