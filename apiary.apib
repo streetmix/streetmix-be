@@ -41,7 +41,6 @@ User Resources
 
 Retrieve a user's information.
 GET /users/{id}
-> Authorization: Streetmix realm="" loginToken="{login-token}"
 > Accept: application/json
 < 200
 {
@@ -50,13 +49,28 @@ GET /users/{id}
   "profileImageUri" "http://a0.twimg.com/profile_images/1777569006/image1327396628_normal.png"
 }
 
+Retrieve a user's streets.
+GET /users/{id}/streets
+> Accept: application/json
+< 200
+{
+  "streets": [
+    {
+      "id": "906f7180-c4ba-11e2-8b8b-0800200c9a66",
+      "creatorId": "9cc211c0-c561-11e2-8b8b-0800200c9a66",
+      "name": "Haight St.",
+      "data": ...
+    },
+    ...
+  ]
+}
+
 --
 Street Resources
 --
 
 Create a new street.
 POST /streets
-> Authorization: Streetmix realm="" loginToken="{login-token}"
 > Accept: application/json
 < 201
 < Content-Type: application/json
@@ -85,9 +99,8 @@ DELETE /streets/{id}
 < 204
 
 
-**[NOT YET IMPLEMENTED]** Update an existing street.
+Update an existing street.
 PUT /streets/{id}
-> Authorization: Streetmix realm="" loginToken="{login-token}"
 > Accept: application/json
 > Content-Type: application/json
 {
