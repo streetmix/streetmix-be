@@ -109,7 +109,8 @@ exports.get = function(req, res) {
 
     var handleFetchUserProfileFromTwitter = function(data) {
     
-      user.asJson(function(err, userJson) {
+      var auth = (req.params.loginToken === user.login_token)
+      user.asJson({ auth: auth }, function(err, userJson) {
 
         if (err) {
           console.error(err)

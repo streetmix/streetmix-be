@@ -5,16 +5,23 @@ var userSchema = new mongoose.Schema({
   username: { type: String, index: { unique: true } },
   twitter_id: String,
   twitter_credentials: mongoose.Schema.Types.Mixed,
-  login_token: { type: String, index: { unique: true } }
+  login_token: { type: String, index: { unique: true } },
+  data: mongoose.Schema.Types.Mixed
 })
 
-userSchema.methods.asJson = function(cb) {
-  cb(null, {
+userSchema.methods.asJson = function(options, cb) {
+  options = options || {}
+
+  var json = {
     id: this.id,
     username: this.username
-  })
+  }
+
+  if (options.auth) {
+    json.data = this.data
+  }
+
+  cb(null, json)
 }
 
 module.exports = mongoose.model('User', userSchema)
-
-
