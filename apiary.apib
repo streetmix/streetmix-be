@@ -108,3 +108,16 @@ PUT /streets/{id}
   "data": ...
 }
 < 204
+
+--
+Feedback Resources
+--
+
+Send feedback to the Streetmix team.
+POST /feedback
+> Content-Type: application/json
+{
+  "from": "john@doe.com",
+  "message": "This is the best application ever!"
+}
+< 202

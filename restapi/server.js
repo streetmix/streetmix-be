@@ -57,6 +57,8 @@ server.del('/v1/streets/:street_id', resources.v1.streets.delete)
 server.get('/v1/streets/:street_id', resources.v1.streets.get)
 server.put('/v1/streets/:street_id', resources.v1.streets.put)
 
+server.post('/v1/feedback', resources.v1.feedback.post)
+
 // Start server
 server.listen(config.restapi.port, function() {
   console.log('%s listening at %s', server.name, server.url)
