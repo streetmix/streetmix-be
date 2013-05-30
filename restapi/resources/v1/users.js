@@ -109,10 +109,18 @@ exports.get = function(req, res) {
 
     var handleFetchUserProfileFromTwitter = function(data) {
     
-      var userJson = user.asJson()
-      userJson.profileImageUrl = data.profile_image_url
+      user.asJson(function(err, userJson) {
 
-      res.send(200, userJson)
+        if (err) {
+          console.error(err)
+          res.send(500, 'Could not render user JSON.')
+          return
+        }
+        
+        userJson.profileImageUrl = data.profile_image_url
+        res.send(200, userJson)
+
+      })
 
     } // END function - handleFetchUserProfileFromTwitter
     

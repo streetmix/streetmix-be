@@ -8,11 +8,11 @@ var userSchema = new mongoose.Schema({
   login_token: { type: String, index: { unique: true } }
 })
 
-userSchema.methods.asJson = function() {
-  return {
+userSchema.methods.asJson = function(cb) {
+  cb(null, {
     id: this.id,
     username: this.username
-  }
+  })
 }
 
 module.exports = mongoose.model('User', userSchema)

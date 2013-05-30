@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "dependencies": {
+    "async": "0.2.x",
     "config": "0.4.22",
     "requireindex": "1.0.0",
     "restify": "2.3.5",

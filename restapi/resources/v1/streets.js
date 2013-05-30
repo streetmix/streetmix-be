@@ -31,8 +31,18 @@ exports.post = function(req, res) {
       res.send(500, 'Could not create street.')
       return
     }
-    res.header('Location', config.restapi.baseuri + '/v1/streets/' + s.id)
-    res.send(201, s.asJson())
+
+    s.asJson(function(err, streetJson) {
+
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not render street JSON.')
+        return
+      }
+
+      res.header('Location', config.restapi.baseuri + '/v1/streets/' + s.id)
+      res.send(201, streetJson)
+    })
 
   } // END function - handleCreateStreet
 
@@ -155,7 +165,18 @@ exports.get = function(req, res) {
       return
     }
 
-    res.send(200, street.asJson())
+    street.asJson(function(err, streetJson) {
+
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not render street JSON.')
+        return
+      }
+
+      res.header('Location', config.restapi.baseuri + '/v1/streets/' + street.id)
+      res.send(200, streetJson)
+
+    })
     
   } // END function - handleFindStreet
 
