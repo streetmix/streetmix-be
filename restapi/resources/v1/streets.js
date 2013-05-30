@@ -3,12 +3,12 @@ var mongoose = require('mongoose'),
     uuid = require('uuid'),
     db = require('../../../lib/db.js'),
     Street = require('../../../models/street.js'),
-    User = require('../../../models/user.js')
+    User = require('../../../models/user.js'),
+    Sequence = require('../../../models/sequence.js')
 
 exports.post = function(req, res) {
 
   var street = new Street()
-  street.id = uuid.v1()
 
   var body
   if (req.body.length > 0) {
@@ -46,6 +46,18 @@ exports.post = function(req, res) {
 
   } // END function - handleCreateStreet
 
+  var handleNewStreetId = function(err, sequence) {
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not create new street ID.')
+      return
+    }
+
+    street.id = sequence.seq
+    street.save(handleCreateStreet)
+
+  } // END function - makeNewStreetId
+
   var handleFindStreet = function(err, origStreet) {
 
     if (!origStreet) {
@@ -55,7 +67,10 @@ exports.post = function(req, res) {
 
     street.original_street_id = origStreet
 
-    street.save(handleCreateStreet)
+    Sequence.findByIdAndUpdate('streets',
+                               { $inc: { 'seq': 1 } },
+                               { new: true, upsert: true },
+                               handleNewStreetId)
 
   } // END function - handleFindStreet
 
@@ -64,7 +79,10 @@ exports.post = function(req, res) {
     if (body && body.originalStreetId) {
       Street.findById(body.originalStreetId, handleFindStreet)
     } else {
-      street.save(handleCreateStreet)
+      Sequence.findByIdAndUpdate('streets',
+                                 { $inc: { 'seq': 1 } },
+                                 { new: true, upsert: true },
+                                 handleNewStreetId)
     }
 
   } // END function - saveStreet
@@ -188,3 +206,59 @@ exports.get = function(req, res) {
   Street.findOne({ id: req.params.street_id }, handleFindStreet)
 
 } // END function - exports.get
+
+exports.put = function(req, res) {
+
+  var body
+  if (req.body.length > 0) {
+    try {
+      body = JSON.parse(req.body)
+    } catch (e) {
+      res.send(400, 'Could not parse body as JSON.')
+      return
+    }
+  } else {
+    res.send(400, 'Street information not specified.')
+    return
+  }
+
+  var handleUpdateStreet = function(err, street) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not update street.')
+      return
+    }
+
+    res.send(204)
+    
+  } // END function - handleUpdateStreet
+
+  var handleFindStreet = function(err, street) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not find street.')
+      return
+    }
+
+    if (!street) {
+      res.send(404, 'Could not find street.')
+      return
+    }
+
+    street.name = body.name || street.name
+    street.data = body.data || street.data
+
+    street.save(handleUpdateStreet)
+
+  } // END function - handleFindStreet
+
+  if (!req.params.street_id) {
+    res.send(400, 'Please provide street ID.')
+    return
+  }
+
+  Street.findOne({ id: req.params.street_id }, handleFindStreet)
+
+} // END function - exports.put

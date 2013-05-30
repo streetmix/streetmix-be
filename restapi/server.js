@@ -55,6 +55,7 @@ server.get('/v1/users/:user_id/streets', resources.v1.users_streets.get)
 server.post('/v1/streets', resources.v1.streets.post)
 server.del('/v1/streets/:street_id', resources.v1.streets.delete)
 server.get('/v1/streets/:street_id', resources.v1.streets.get)
+server.put('/v1/streets/:street_id', resources.v1.streets.put)
 
 // Start server
 server.listen(config.restapi.port, function() {
