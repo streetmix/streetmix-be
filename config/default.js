@@ -17,8 +17,8 @@ module.exports = {
       username: process.env.SENDGRID_USERNAME,
       password: process.env.SENDGRID_PASSWORD
     },
-    feedback_recipient: "streetmix@codeforamerica.org",
-    feedback_subject: "Feedback from user (in " + process.env.NODE_ENV + " environment)",
+    feedback_recipient: process.env.EMAIL_FEEDBACK_RECIPIENT || "streetmix@codeforamerica.org",
+    feedback_subject: "Streetmix feedback",
     feedback_sender_default: "noreply@codeforamerica.org"
   }
 }
