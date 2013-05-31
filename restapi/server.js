@@ -48,11 +48,11 @@ var unknownMethodHandler = function(req, res) {
 server.on('MethodNotAllowed', requestLog)
 server.on('MethodNotAllowed', unknownMethodHandler)
 
+server.use(loginTokenParser)
+server.use(requestLog)
 server.use(restify.bodyParser())
 server.use(restify.CORS())
 server.use(restify.fullResponse())
-server.use(loginTokenParser)
-server.use(requestLog)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
