@@ -30,7 +30,7 @@ streetSchema.methods.asJson = function(cb) {
         if (err) {
           callback(err)
         } else {
-          creator.asJson(function(err, creatorJson) {
+          creator.asJson(null, function(err, creatorJson) {
             if (err) {
               callback(err)
             } else {

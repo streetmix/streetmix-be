@@ -11,7 +11,7 @@ exports.post = function(req, res) {
   var street = new Street()
 
   var body
-  if (req.body.length > 0) {
+  if (req.body && (req.body.length > 0)) {
     try {
       body = JSON.parse(req.body)
     } catch (e) {
@@ -210,7 +210,7 @@ exports.get = function(req, res) {
 exports.put = function(req, res) {
 
   var body
-  if (req.body.length > 0) {
+  if (req.body && (req.body.length > 0)) {
     try {
       body = JSON.parse(req.body)
     } catch (e) {
