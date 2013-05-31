@@ -180,3 +180,52 @@ exports.delete = function(req, res) {
   User.findOne({ id: userId }, handleFindUser)
 
 } // END function - exports.delete
+
+exports.put = function(req, res) {
+
+  var body
+  try {
+    body = JSON.parse(req.body)
+  } catch (e) {
+    res.send(400, 'Could not parse body as JSON.')
+    return
+  }
+
+  var handleSaveUser = function(err, user) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not update user information.')
+      return
+    }
+    res.send(204)
+
+  } // END function - handleSaveUser
+
+  var handleFindUser = function(err, user) {
+
+    if (!user) {
+      res.send(404, 'User not found.')
+      return
+    }
+
+    if (user.login_token != req.params.loginToken) {
+      res.send(401)
+      return
+    }
+
+    user.data = body.data || user.data
+    user.save(handleSaveUser)
+
+  } // END function - handleFindUser
+
+  // Flag error if user ID is not provided
+  if (!req.params.user_id) {
+    res.send(400, 'Please provide user ID.')
+    return
+  }
+
+  var userId = req.params.user_id
+  User.findOne({ id: userId }, handleFindUser)
+
+} // END function - exports.put
