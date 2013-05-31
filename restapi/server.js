@@ -1,5 +1,6 @@
 var config = require('config'),
     restify = require('restify'),
+    dateformat = require('dateformat'),
     resources = require(__dirname + '/resources'),
     util = require(__dirname + '/lib/util.js')
 
@@ -11,10 +12,14 @@ var server = restify.createServer({
 
 var requestLog = function(req, res, next) {
   var loginToken = ''
-  if (req.params.loginToken) {
-    loginToken = "loginToken = " + req.params.loginToken
+  if (req.params && req.params.loginToken) {
+    loginToken = req.params.loginToken
   }
-  console.log('[ %s ] %s %s %s %s %s', new Date(), req.method, req.url, req.headers['content-type'], req.body, loginToken)
+  var contentType = req.headers['content-type'] || ''
+  var body = req.body || ''
+  var now = new Date()
+  var date = dateformat(now, "m/d/yyyy H:MM:ss Z")
+  console.log('[ %s ] %s %s | %s | %s | %s', date, req.method, req.url, contentType, body, loginToken)
   next()
 }
 
