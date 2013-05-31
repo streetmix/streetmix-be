@@ -10,8 +10,11 @@ var server = restify.createServer({
 })
 
 var requestLog = function(req, res, next) {
-  var requestParams = req.params || {}
-  console.log('[ %s ] %s %s %j', new Date(), req.method, req.url, requestParams)
+  var loginToken = ''
+  if (req.params.loginToken) {
+    loginToken = "loginToken = " + req.params.loginToken
+  }
+  console.log('[ %s ] %s %s %s %s %s', new Date(), req.method, req.url, req.headers['content-type'], req.body, loginToken)
   next()
 }
 
