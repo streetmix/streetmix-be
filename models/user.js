@@ -2,7 +2,6 @@ var mongoose = require('mongoose')
 
 var userSchema = new mongoose.Schema({
   id: { type: String, index: { unique: true } },
-  username: { type: String, index: { unique: true } },
   twitter_id: String,
   twitter_credentials: mongoose.Schema.Types.Mixed,
   login_token: { type: String, index: { unique: true } },
@@ -12,10 +11,7 @@ var userSchema = new mongoose.Schema({
 userSchema.methods.asJson = function(options, cb) {
   options = options || {}
 
-  var json = {
-    id: this.id,
-    username: this.username
-  }
+  var json = {}
 
   if (options.auth) {
     json.data = this.data

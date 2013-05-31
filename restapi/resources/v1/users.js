@@ -44,8 +44,7 @@ exports.post = function(req, res) {
       
       if (!user) {
         var u = new User({
-          id: uuid.v1(),
-          username: twitterCredentials.screenName,
+          id: twitterCredentials.screenName,
           twitter_id: twitterCredentials.userId,
           twitter_credentials: {
             access_token_key: twitterCredentials.oauthAccessTokenKey,
@@ -56,7 +55,7 @@ exports.post = function(req, res) {
         u.save(handleCreateUser)
 
       } else {
-        user.username = twitterCredentials.screenName,
+        user.id = twitterCredentials.screenName,
         user.twitter_credentials = { 
           access_token_key: twitterCredentials.oauthAccessTokenKey,
           access_token_secret: twitterCredentials.oauthAccessTokenSecret
