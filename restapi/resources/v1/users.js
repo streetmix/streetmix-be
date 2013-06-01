@@ -118,6 +118,7 @@ exports.get = function(req, res) {
         }
         
         userJson.profileImageUrl = data.profile_image_url
+        userJson.data = user.data
         res.send(200, userJson)
 
       })
