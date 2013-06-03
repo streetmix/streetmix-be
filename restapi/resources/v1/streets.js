@@ -100,7 +100,7 @@ exports.post = function(req, res) {
   } // END function - handleFindUser
 
   if (req.params.loginToken) {
-    User.findOne({ login_token: req.params.loginToken }, handleFindUser)
+    User.findOne({ login_tokens: { $in: [ req.params.loginToken ] } }, handleFindUser)
   } else {
     saveStreet()
   }    
@@ -150,7 +150,7 @@ exports.delete = function(req, res) {
 
     } // END function - handleFindUser
 
-    User.findOne({ login_token: req.params.loginToken }, handleFindUser)
+    User.findOne({ login_tokens: { $in: [ req.params.loginToken ] } }, handleFindUser)
 
   } // END function - handleFindStreet
 
