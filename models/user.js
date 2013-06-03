@@ -4,7 +4,7 @@ var userSchema = new mongoose.Schema({
   id: { type: String, index: { unique: true } },
   twitter_id: String,
   twitter_credentials: mongoose.Schema.Types.Mixed,
-  login_token: { type: String, index: { unique: true } },
+  login_tokens: [ String ],
   data: mongoose.Schema.Types.Mixed
 })
 

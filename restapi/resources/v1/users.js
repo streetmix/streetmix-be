@@ -7,6 +7,8 @@ var mongoose = require('mongoose'),
 
 exports.post = function(req, res) {
 
+  var loginToken = null
+
   var handleTwitterSignIn = function(twitterCredentials) {
 
     // TODO: Call Twitter API with OAuth access credentials to make sure they are valid
@@ -18,7 +20,7 @@ exports.post = function(req, res) {
         return
       }
       res.header('Location', config.restapi.baseuri + '/v1/users/' + user.id)
-      res.send(201, { id: user.id, loginToken: user.login_token })
+      res.send(201, { id: user.id, loginToken: loginToken })
 
     } // END function - handleCreateUser
 
@@ -30,7 +32,7 @@ exports.post = function(req, res) {
         return
       }
       res.header('Location', config.restapi.baseuri + '/v1/users/' + user.id)
-      res.send(200, { id: user.id, loginToken: user.login_token })
+      res.send(200, { id: user.id, loginToken: loginToken })
 
     } // END function - handleUpdateUser
 
@@ -42,6 +44,7 @@ exports.post = function(req, res) {
         return
       }
       
+      loginToken = uuid.v1()
       if (!user) {
         var u = new User({
           id: twitterCredentials.screenName,
@@ -50,7 +53,7 @@ exports.post = function(req, res) {
             access_token_key: twitterCredentials.oauthAccessTokenKey,
             access_token_secret: twitterCredentials.oauthAccessTokenSecret
           },
-          login_token: uuid.v1()
+          login_tokens: [ loginToken ]
         })
         u.save(handleCreateUser)
 
@@ -60,7 +63,7 @@ exports.post = function(req, res) {
           access_token_key: twitterCredentials.oauthAccessTokenKey,
           access_token_secret: twitterCredentials.oauthAccessTokenSecret
         }
-        user.login_token = uuid.v1()
+        user.login_tokens.push(loginToken)
         user.save(handleUpdateUser)
       }
 
@@ -108,7 +111,7 @@ exports.get = function(req, res) {
 
     var handleFetchUserProfileFromTwitter = function(data) {
     
-      var auth = (req.params.loginToken === user.login_token)
+      var auth = (user.login_tokens.indexOf(req.params.loginToken) > 0)
       user.asJson({ auth: auth }, function(err, userJson) {
 
         if (err) {
@@ -158,26 +161,27 @@ exports.delete = function(req, res) {
       res.send(404, 'User not found.')
       return
     }
-
-    if (user.login_token != req.params.loginToken) {
+    
+    var idx = user.login_tokens.indexOf(req.params.loginToken)
+    if (idx === -1) {
       res.send(401)
       return
     }
-
-    user.login_token = null
+    
+    user.login_tokens.splice(idx, 1)
     user.save(handleSaveUser)
-
+    
   } // END function - handleFindUser
-
+  
   // Flag error if user ID is not provided
   if (!req.params.user_id) {
     res.send(400, 'Please provide user ID.')
     return
   }
-
+  
   var userId = req.params.user_id
   User.findOne({ id: userId }, handleFindUser)
-
+  
 } // END function - exports.delete
 
 exports.put = function(req, res) {
@@ -208,7 +212,7 @@ exports.put = function(req, res) {
       return
     }
 
-    if (user.login_token != req.params.loginToken) {
+    if (user.login_tokens.indexOf(req.params.loginToken) === -1) {
       res.send(401)
       return
     }
