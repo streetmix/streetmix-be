@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 
 var streetSchema = new mongoose.Schema({
   id: { type: String, index: { unique: true } },
+  namespaced_id: Number,
   name: String,
   creator_id: { type: mongoose.Schema.ObjectId, ref: mongoose.model('User')},
   data: mongoose.Schema.Types.Mixed,

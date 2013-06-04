@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 exports.post = function(req, res) {
 
   var street = new Street()
+  street.id = uuid.v1()
 
   var body
   if (req.body && (req.body.length > 0)) {
@@ -18,22 +19,22 @@ exports.post = function(req, res) {
       res.send(400, 'Could not parse body as JSON.')
       return
     }
-
+    
     // TODO: Validation
-
+    
     street.name = body.name
     street.data = body.data
   }
-
+  
   var handleCreateStreet = function(err, s) {
     if (err) {
       console.error(err)
       res.send(500, 'Could not create street.')
       return
     }
-
+    
     s.asJson(function(err, streetJson) {
-
+      
       if (err) {
         console.error(err)
         res.send(500, 'Could not render street JSON.')
@@ -46,17 +47,37 @@ exports.post = function(req, res) {
 
   } // END function - handleCreateStreet
 
-  var handleNewStreetId = function(err, sequence) {
+  var handleNewStreetNamespacedId = function(err, namespacedId) {
     if (err) {
       console.error(err)
       res.send(500, 'Could not create new street ID.')
       return
     }
 
-    street.id = sequence.seq
+    street.namespaced_id = namespacedId
     street.save(handleCreateStreet)
-
-  } // END function - makeNewStreetId
+    
+  } // END function - handleNewStreetNamespacedId
+  
+  var makeNamespacedId = function() {
+    
+    if (street.creator_id) {
+      User.findByIdAndUpdate(street.creator_id,
+                             { $inc: { 'last_street_id': 1 } },
+                             null,
+                             function (err, row) {
+                               handleNewStreetNamespacedId(err, (row ? row.last_street_id : null))
+                             })
+    } else {
+      Sequence.findByIdAndUpdate('streets',
+                                 { $inc: { 'seq': 1 } },
+                                 { new: true, upsert: true },
+                                 function (err, row) {
+                                   handleNewStreetNamespacedId(err, (row ? row.seq : null))
+                                 })
+    }
+      
+  } // END function - makeNamespacedId
 
   var handleFindStreet = function(err, origStreet) {
 
@@ -66,11 +87,7 @@ exports.post = function(req, res) {
     }
 
     street.original_street_id = origStreet
-
-    Sequence.findByIdAndUpdate('streets',
-                               { $inc: { 'seq': 1 } },
-                               { new: true, upsert: true },
-                               handleNewStreetId)
+    makeNamespacedId()
 
   } // END function - handleFindStreet
 
@@ -79,10 +96,7 @@ exports.post = function(req, res) {
     if (body && body.originalStreetId) {
       Street.findById(body.originalStreetId, handleFindStreet)
     } else {
-      Sequence.findByIdAndUpdate('streets',
-                                 { $inc: { 'seq': 1 } },
-                                 { new: true, upsert: true },
-                                 handleNewStreetId)
+      makeNamespacedId()
     }
 
   } // END function - saveStreet
@@ -207,6 +221,58 @@ exports.get = function(req, res) {
 
 } // END function - exports.get
 
+exports.find = function(req, res) {
+
+  var creatorId = req.query.creatorId
+  var namespacedId = req.query.namespacedId
+
+  var handleFindStreet = function(err, street) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not find street.')
+      return
+    }
+
+    if (!street) {
+      res.send(404, 'Could not find street.')
+      return
+    }
+
+    street.asJson(function(err, streetJson) {
+
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not render street JSON.')
+        return
+      }
+
+      res.header('Location', config.restapi.baseuri + '/v1/streets/' + street.id)
+      res.send(301)
+
+    })
+    
+  } // END function - handleFindStreet
+  
+  var handleFindUser = function(err, user) {
+
+    if (!user) {
+      res.send(404, 'Creator not found.')
+      return
+    }
+    
+    Street.findOne({ namespaced_id: namespacedId, creator_id: user._id }, handleFindStreet)
+    
+  } // END function - handleFindUser
+  
+  if (creatorId) {
+    User.findOne({ id: creatorId }, handleFindUser)
+  } else {
+    Street.findOne({ namespaced_id: namespacedId, creator_id: null }, handleFindStreet)
+  }
+  
+} // END function - exports.find
+
 exports.put = function(req, res) {
 
   var body
@@ -251,9 +317,9 @@ exports.put = function(req, res) {
     street.data = body.data || street.data
 
     street.save(handleUpdateStreet)
-
+    
   } // END function - handleFindStreet
-
+  
   if (!req.params.street_id) {
     res.send(400, 'Please provide street ID.')
     return
