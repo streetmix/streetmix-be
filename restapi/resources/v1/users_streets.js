@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     config = require('config'),
     async = require('async'),
+    db = require('../../../lib/db.js'),
     User = require('../../../models/user.js'),
     Street = require('../../../models/street.js')
 

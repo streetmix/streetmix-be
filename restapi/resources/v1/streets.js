@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     config = require('config'),
     uuid = require('uuid'),
+    db = require('../../../lib/db.js'),
     Street = require('../../../models/street.js'),
     User = require('../../../models/user.js'),
     Sequence = require('../../../models/sequence.js')

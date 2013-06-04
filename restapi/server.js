@@ -1,5 +1,4 @@
 var config = require('config'),
-    mongoose = require('mongoose'),
     restify = require('restify'),
     dateformat = require('dateformat'),
     resources = require(__dirname + '/resources'),
@@ -29,15 +28,6 @@ var loginTokenParser = function(req, res, next) {
   next()
 } // END function - loginTokenParser
 
-var dbConnection = function(req, res, next) {
-  var db = mongoose.connection.db
-  if (!db) {
-    mongoose.connect(config.db.url, next)
-  } else {
-    next()
-  }
-} // END function - dbConnection
-
 var unknownMethodHandler = function(req, res) {
   if (req.method.toLowerCase() === 'options') {
     var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization']
@@ -64,7 +54,6 @@ server.use(restify.CORS())
 server.use(restify.fullResponse())
 server.use(loginTokenParser)
 server.use(requestLog)
-server.use(dbConnection)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
@@ -81,4 +70,7 @@ server.put('/v1/streets/:street_id', resources.v1.streets.put)
 
 server.post('/v1/feedback', resources.v1.feedback.post)
 
-module.exports = server
+// Start server
+server.listen(config.restapi.port, function() {
+  console.log('%s listening at %s', server.name, server.url)
+})
