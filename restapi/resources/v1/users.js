@@ -2,7 +2,6 @@ var mongoose = require('mongoose'),
     config = require('config'),
     uuid = require('uuid'),
     twitter = require('twitter'),
-    db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
 
 exports.post = function(req, res) {
