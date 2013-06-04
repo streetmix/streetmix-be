@@ -28,6 +28,7 @@ streetSchema.methods.asJson = function(cb) {
 
   var json = {
     id: this.id,
+    namespacedId: this.namespaced_id,
     name: this.name,
     data: this.data,
     createdAt: this.created_at,
