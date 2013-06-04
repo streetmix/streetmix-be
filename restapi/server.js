@@ -30,7 +30,7 @@ var loginTokenParser = function(req, res, next) {
 
 var unknownMethodHandler = function(req, res) {
   if (req.method.toLowerCase() === 'options') {
-    var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization']
+    var allowHeaders = ['Accept', 'Accept-Encoding', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization']
 
     if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS')
     
