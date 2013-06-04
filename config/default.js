@@ -1,9 +1,10 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+var port = process.env.PORT || 8080
 
 module.exports = {
   restapi: {
-    port: process.env.PORT || 8080,
-    baseuri: 'http://localhost:8080'
+    port: port,
+    baseuri: 'http://localhost:' + port
   },
   db: {
     url: process.env.MONGOHQ_URL || 'mongodb://localhost/streetmix'
