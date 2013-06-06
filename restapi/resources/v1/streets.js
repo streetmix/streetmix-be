@@ -274,7 +274,7 @@ exports.find = function(req, res) {
       }
 
       res.header('Location', config.restapi.baseuri + '/v1/streets/' + street.id)
-      res.send(301)
+      res.send(307)
 
     })
     
