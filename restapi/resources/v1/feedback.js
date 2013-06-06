@@ -41,10 +41,15 @@ exports.post = function(req, res) {
     config.email.sendgrid.password
   )
 
+  var subject = config.email.feedback_subject;
+  if (from) {
+    subject += ' from ' + from;
+  }
+
   sendgrid.send({
     to: to,
     from: from || config.email.feedback_sender_default,
-    subject: config.email.feedback_subject,
+    subject: subject,
     text: message
   }, function(success, message) {
     if (!success) {
