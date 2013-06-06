@@ -61,31 +61,25 @@ streetSchema.methods.asJson = function(cb) {
      
   } // END function - appendCreator
 
-  var appendOriginalStreet = function(callback) {
+  var appendOriginalStreetId = function(callback) {
     if (originalStreetId) {
       mongoose.model('Street').findById(originalStreetId, function(err, originalStreet) {
         if (err) {
           callback(err)
         } else {
-          originalStreet.asJson(function(err, originalStreetJson) {
-            if (err) {
-              callback(err)
-            } else {
-              json.originalStreet = originalStreetJson
-              callback()
-            } // END else
-          })
+          json.originalStreetId = originalStreet.id
+          callback()
         } // END else
       })
     } else {
       callback()
     }
 
-  } // END function - appendOriginalStreet
+  } // END function - appendOriginalStreetId
 
   async.parallel([
     appendCreator,
-    appendOriginalStreet
+    appendOriginalStreetId
   ], function(err) {
     cb(err, json)
   })
