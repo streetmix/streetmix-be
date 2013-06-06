@@ -63,7 +63,7 @@ streetSchema.methods.asJson = function(cb) {
 
   var appendOriginalStreet = function(callback) {
     if (originalStreetId) {
-      Street.findById(originalStreetId, function(err, originalStreet) {
+      mongoose.model('Street').findById(originalStreetId, function(err, originalStreet) {
         if (err) {
           callback(err)
         } else {
@@ -92,5 +92,4 @@ streetSchema.methods.asJson = function(cb) {
 
 }
     
-
 module.exports = mongoose.model('Street', streetSchema)
