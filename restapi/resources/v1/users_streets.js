@@ -9,29 +9,8 @@ exports.get = function(req, res) {
 
   var handleFindUser = function(err, user) {
    
-    if (!user) {
-      res.send(404, 'User not found.')
-      return
-    }
-
     var json = { streets: [] }
 
-    var appendStreet = function(street, callback) {
-
-      street.asJson(function(err, streetJson) {
-
-        if (err) {
-          callback(err)
-          return
-        }
-
-        json.streets.push(streetJson)
-        callback()
-
-      })
-      
-    } // END function - appendStreet
-    
     var handleFindStreets = function(err, streets) {
       
       if (err) {
@@ -42,15 +21,16 @@ exports.get = function(req, res) {
       
       async.map(
         streets,
-        appendStreet,
-        function(err) {
+        function(street, callback) { street.asJson(callback) },
+        function(err, results) {
           
           if (err) {
             console.error(err)
             res.send(500, 'Could not append street.')
             return
           }
-          
+
+          json.streets = results
           res.send(200, json)
           
         }) // END - async.map
@@ -58,7 +38,7 @@ exports.get = function(req, res) {
     } // END function - handleFindStreets
   
     Street.find({ creator_id: user._id })
-      .sort('-updated_at')
+      .sort({ updated_at: 'descending' })
       .exec(handleFindStreets)
     
   } // END function - handleFindUser
