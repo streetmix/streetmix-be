@@ -63,7 +63,7 @@ streetSchema.methods.asJson = function(cb) {
 
   var appendOriginalStreet = function(callback) {
     if (originalStreetId) {
-      User.findById(originalStreetId, function(err, originalStreet) {
+      Street.findById(originalStreetId, function(err, originalStreet) {
         if (err) {
           callback(err)
         } else {
