@@ -45,6 +45,12 @@ var unknownMethodHandler = function(req, res) {
     return res.send(new restify.MethodNotAllowedError())
 }
 
+var customCacheControlHeaders = function(req, res, next) {
+  res.header('Pragma', 'no-cache')
+  res.header('Cache-Control', 'no-cache, no-store')
+  next()
+} // END function - customCacheControlHeaders
+
 server.on('MethodNotAllowed', requestLog)
 server.on('MethodNotAllowed', unknownMethodHandler)
 
@@ -54,6 +60,7 @@ server.use(restify.CORS())
 server.use(restify.fullResponse())
 server.use(loginTokenParser)
 server.use(requestLog)
+server.use(customCacheControlHeaders)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
