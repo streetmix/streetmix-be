@@ -22,9 +22,9 @@ exports.post = function(req, res) {
   var referer = req.headers.referer || '(not specified)'
   var remoteAddress = req.connection.remoteAddress || req.headers['X-Forwarded-For']
   message += "\n\n"
-    + "---\n"
-    + "URL of originating page: " + referer + "\n"
-    + "User's IP address: " + remoteAddress + "\n"
+    + "-- \n"
+    + "Page URL: " + referer + "\n"
+    + "User IP: " + remoteAddress + "\n"
 
   var to = [ config.email.feedback_recipient ]
   var from
