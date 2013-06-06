@@ -99,7 +99,7 @@ exports.post = function(req, res) {
   var saveStreet = function() {
 
     if (body && body.originalStreetId) {
-      Street.findById(body.originalStreetId, handleFindStreet)
+      Street.findOne({ id: body.originalStreetId }, handleFindStreet)
     } else {
       makeNamespacedId()
     }
@@ -122,7 +122,7 @@ exports.post = function(req, res) {
     User.findOne({ login_tokens: { $in: [ req.params.loginToken ] } }, handleFindUser)
   } else {
     saveStreet()
-  }    
+  }
 
 } // END function - exports.post
 
