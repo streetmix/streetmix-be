@@ -37,7 +37,7 @@ exports.get = function(req, res) {
 
     } // END function - handleFindStreets
   
-    Street.find({ creator_id: user._id })
+    Street.find({ creator_id: user._id, status: 'ACTIVE' })
       .sort({ updated_at: 'descending' })
       .exec(handleFindStreets)
     
