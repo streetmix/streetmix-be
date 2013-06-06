@@ -86,6 +86,11 @@ exports.post = function(req, res) {
       return
     }
 
+    if (origStreet.status === 'DELETED') {
+      res.send(410, 'Original street not found.')
+      return
+    }
+
     street.original_street_id = origStreet
     makeNamespacedId()
 
@@ -123,6 +128,17 @@ exports.post = function(req, res) {
 
 exports.delete = function(req, res) {
 
+  var handleDeleteStreet = function(err, s) {
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not delete street.')
+      return
+    }
+    
+    res.send(204)
+
+  } // END function - handleDeleteStreet
+
   var handleFindStreet = function(err, street) {
 
     if (err) {
@@ -132,7 +148,7 @@ exports.delete = function(req, res) {
     }
 
     if (!street) {
-      res.send(404, 'Could not find street.')
+      res.send(204)
       return
     }
 
@@ -159,8 +175,8 @@ exports.delete = function(req, res) {
         return
       }
       
-      street.remove()
-      res.send(204)
+      street.status = 'DELETED'
+      street.save(handleDeleteStreet)
 
     } // END function - handleFindUser
 
@@ -194,6 +210,11 @@ exports.get = function(req, res) {
 
     if (!street) {
       res.send(404, 'Could not find street.')
+      return
+    }
+
+    if (street.status === 'DELETED') {
+      res.send(410, 'Could not find street.')
       return
     }
 
@@ -236,6 +257,11 @@ exports.find = function(req, res) {
 
     if (!street) {
       res.send(404, 'Could not find street.')
+      return
+    }
+
+    if (street.status === 'DELETED') {
+      res.send(410, 'Could not find street.')
       return
     }
 
@@ -310,6 +336,11 @@ exports.put = function(req, res) {
 
     if (!street) {
       res.send(404, 'Could not find street.')
+      return
+    }
+
+    if (street.status === 'DELETED') {
+      res.send(410, 'Could not find street.')
       return
     }
 
