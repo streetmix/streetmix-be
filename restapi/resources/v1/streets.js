@@ -247,7 +247,9 @@ exports.find = function(req, res) {
 
   var creatorId = req.query.creatorId
   var namespacedId = req.query.namespacedId
-
+  var start = (req.query.start && parseInt(req.query.start) || 0)
+  var count = (req.query.count && parseInt(req.query.count) || 20)
+  
   var handleFindStreet = function(err, street) {
 
     if (err) {
@@ -292,14 +294,44 @@ exports.find = function(req, res) {
     
   } // END function - handleFindUser
   
-  var handleFindStreets = function(err, streets) {
-    
-    var json = { streets: [] }
+  var handleFindStreets = function(err, results) {
 
     if (err) {
       console.error(err)
       res.send(500, 'Could not find streets.')
       return
+    }
+    
+    var totalNumStreets = results[0]
+    var streets = results[1]
+    
+    var selfUri = config.restapi.baseuri + '/v1/streets?start=' + start + '&count=' + count
+      
+    var json = {
+      meta: {
+        self: selfUri
+      },
+      streets: []
+    }
+
+    if (start > 0) { 
+      var prevStart, prevCount
+      if (start >= count) {
+        prevStart = start - count
+        prevCount = count
+      } else { 
+        prevStart = 0
+        prevCount = start
+      }
+      json.meta.prev = config.restapi.baseuri + '/v1/streets?start=' + prevStart + '&count=' + prevCount
+    }
+
+    if (start + streets.length < totalNumStreets) {
+      console.log('here')
+      var nextStart, nextCount
+      nextStart = start + count
+      nextCount = Math.min(count, totalNumStreets - start - streets.length)
+      json.meta.next = config.restapi.baseuri + '/v1/streets?start=' + nextStart + '&count=' + nextCount
     }
     
     async.map(
@@ -325,7 +357,16 @@ exports.find = function(req, res) {
   } else if (namespacedId) {
     Street.findOne({ namespaced_id: namespacedId, creator_id: null }, handleFindStreet)
   } else {
-    Street.find({ status: 'ACTIVE' }, handleFindStreets)
+
+    async.parallel([
+      function(callback) { Street.count({ status: 'ACTIVE' }, callback) },
+      function(callback) {
+        Street.find({ status: 'ACTIVE' })
+          .skip(start)
+          .limit(count)
+          .exec(callback)
+      }
+    ], handleFindStreets)
   }
   
 } // END function - exports.find
