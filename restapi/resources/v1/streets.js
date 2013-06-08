@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var async = require('async'),
+    mongoose = require('mongoose'),
     config = require('config'),
     uuid = require('uuid'),
     db = require('../../../lib/db.js'),
@@ -291,10 +292,40 @@ exports.find = function(req, res) {
     
   } // END function - handleFindUser
   
+  var handleFindStreets = function(err, streets) {
+    
+    var json = { streets: [] }
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not find streets.')
+      return
+    }
+    
+    async.map(
+      streets,
+      function(street, callback) { street.asJson(callback) },
+      function(err, results) {
+        
+        if (err) {
+          console.error(err)
+          res.send(500, 'Could not append street.')
+          return
+        }
+
+        json.streets = results
+        res.send(200, json)
+        
+      }) // END - async.map
+    
+  } // END function - handleFindStreets
+
   if (creatorId) {
     User.findOne({ id: creatorId }, handleFindUser)
-  } else {
+  } else if (namespacedId) {
     Street.findOne({ namespaced_id: namespacedId, creator_id: null }, handleFindStreet)
+  } else {
+    Street.find({ status: 'ACTIVE' }, handleFindStreets)
   }
   
 } // END function - exports.find
