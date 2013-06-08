@@ -309,7 +309,9 @@ exports.find = function(req, res) {
       
     var json = {
       meta: {
-        self: selfUri
+        links: {
+          self: selfUri
+        }
       },
       streets: []
     }
@@ -323,7 +325,7 @@ exports.find = function(req, res) {
         prevStart = 0
         prevCount = start
       }
-      json.meta.prev = config.restapi.baseuri + '/v1/streets?start=' + prevStart + '&count=' + prevCount
+      json.meta.links.prev = config.restapi.baseuri + '/v1/streets?start=' + prevStart + '&count=' + prevCount
     }
 
     if (start + streets.length < totalNumStreets) {
@@ -331,7 +333,7 @@ exports.find = function(req, res) {
       var nextStart, nextCount
       nextStart = start + count
       nextCount = Math.min(count, totalNumStreets - start - streets.length)
-      json.meta.next = config.restapi.baseuri + '/v1/streets?start=' + nextStart + '&count=' + nextCount
+      json.meta.links.next = config.restapi.baseuri + '/v1/streets?start=' + nextStart + '&count=' + nextCount
     }
     
     async.map(
