@@ -21,10 +21,13 @@ exports.post = function(req, res) {
   // Append useful information to message
   var referer = req.headers.referer || '(not specified)'
   var remoteAddress = req.connection.remoteAddress || req.headers['X-Forwarded-For']
+  var additionalInformation = JSON.stringify(body.additionalInformation, null, 2) || '(not specified)'
+
   message += "\n\n"
     + "-- \n"
     + "Page URL: " + referer + "\n"
     + "User IP: " + remoteAddress + "\n"
+    + "Additional information: " + additionalInformation + "\n"
 
   var to = [ config.email.feedback_recipient ]
   var from
