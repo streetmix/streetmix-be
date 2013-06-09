@@ -8,6 +8,17 @@ var mongoose = require('mongoose'),
 exports.get = function(req, res) {
 
   var handleFindUser = function(err, user) {
+
+    if (err) {
+      console.error(err)
+      res.send(500, 'Could not find user.')
+      return
+    }
+
+    if (!user) {
+      res.send(404, 'Could not find user.')
+      return
+    }
    
     var json = { streets: [] }
 
