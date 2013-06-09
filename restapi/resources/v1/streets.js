@@ -364,6 +364,7 @@ exports.find = function(req, res) {
       function(callback) { Street.count({ status: 'ACTIVE' }, callback) },
       function(callback) {
         Street.find({ status: 'ACTIVE' })
+          .sort({ updated_at: 'descending' })
           .skip(start)
           .limit(count)
           .exec(callback)
