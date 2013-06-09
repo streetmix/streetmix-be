@@ -329,7 +329,6 @@ exports.find = function(req, res) {
     }
 
     if (start + streets.length < totalNumStreets) {
-      console.log('here')
       var nextStart, nextCount
       nextStart = start + count
       nextCount = Math.min(count, totalNumStreets - start - streets.length)
