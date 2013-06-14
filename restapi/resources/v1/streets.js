@@ -196,7 +196,7 @@ exports.delete = function(req, res) {
   }
 
   Street.findOne({ id: req.params.street_id }, handleFindStreet)
-
+  
 } // END function - exports.delete
 
 exports.get = function(req, res) {
@@ -418,11 +418,55 @@ exports.put = function(req, res) {
       return
     }
 
-    street.name = body.name || street.name
-    street.data = body.data || street.data
+    var updateStreetData = function() {
 
-    street.save(handleUpdateStreet)
-    
+      street.name = body.name || street.name
+      street.data = body.data || street.data
+      
+      street.save(handleUpdateStreet)
+
+    }
+
+    var handleFindUser = function(err, user) {
+      
+      if (err) {
+        console.error(err)
+        res.send(500, 'Could not find signed-in user.')
+        return
+      }
+      
+      if (!user) {
+        res.send(401, 'User is not signed-in.')
+        return
+      }
+
+      if (!street.creator_id) {
+        res.send(403, 'Signed-in user cannot update this street.')
+        return
+      }
+
+      if (street.creator_id.toString() !== user._id.toString()) {
+        res.send(403, 'Signed-in user cannot update this street.')
+        return
+      }
+      
+      updateStreetData()
+      
+    } // END function - handleFindUser
+
+    if (!street.creator_id) {
+      updateStreetData()      
+    } else {
+
+      if (!req.params.loginToken) {
+        res.send(401)
+        return
+      }
+      
+      User.findOne({ login_tokens: { $in: [ req.params.loginToken ] } }, handleFindUser)
+
+    } // END else - street has a creator
+
   } // END function - handleFindStreet
   
   if (!req.params.street_id) {
