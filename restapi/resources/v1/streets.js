@@ -418,14 +418,35 @@ exports.put = function(req, res) {
       return
     }
 
+    var handleFindOriginalStreet = function(err, origStreet) {
+
+      if (!origStreet) {
+        res.send(404, 'Original street not found.')
+        return
+      }
+      
+      if (origStreet.status === 'DELETED') {
+        res.send(410, 'Original street not found.')
+        return
+      }
+      
+      street.original_street_id = origStreet
+      street.save(handleUpdateStreet)
+
+    } // END function - handleFindOriginalStreet
+
     var updateStreetData = function() {
 
       street.name = body.name || street.name
       street.data = body.data || street.data
-      
-      street.save(handleUpdateStreet)
+     
+      if (body.originalStreetId) {
+        Street.findOne({ id: body.originalStreetId }, handleFindOriginalStreet)
+      } else {
+        street.save(handleUpdateStreet)
+      }
 
-    }
+    } // END function - updateStreetData
 
     var handleFindUser = function(err, user) {
       
