@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     config = require('config'),
     uuid = require('uuid'),
-    twitter = require('twitter'),
+    twitter = require('twit'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
 
@@ -102,32 +102,57 @@ exports.get = function(req, res) {
       return
     }
 
-    var twitterApiClient = new twitter({
-      consumer_key: config.twitter.oauth_consumer_key,
-      consumer_secret: config.twitter.oauth_consumer_secret,
-      access_token_key: user.twitter_credentials.access_token_key,
-      access_token_secret: user.twitter_credentials.access_token_secret
-    })
+    var twitterApiClient
+      try {
 
-    var handleFetchUserProfileFromTwitter = function(data) {
+          twitterApiClient = new twitter({
+            consumer_key: config.twitter.oauth_consumer_key,
+            consumer_secret: config.twitter.oauth_consumer_secret,
+            access_token: user.twitter_credentials.access_token_key,
+            access_token_secret: user.twitter_credentials.access_token_secret
+          })
+        
+      } catch (e) {
+        console.error('Could not initialize Twitter API client. Error:')
+        console.error(e)
+      }
     
+    var sendUserJson = function(twitterData) {
+
       var auth = (user.login_tokens.indexOf(req.params.loginToken) > 0)
       user.asJson({ auth: auth }, function(err, userJson) {
-
+        
         if (err) {
           console.error(err)
           res.send(500, 'Could not render user JSON.')
           return
         }
         
-        userJson.profileImageUrl = data.profile_image_url
-        res.send(200, userJson)
+        if (twitterData) {
+          userJson.profileImageUrl = twitterData.profile_image_url
+        }
 
+        res.send(200, userJson)
+        
       })
+
+    } // END function - sendUserJson
+
+    var handleFetchUserProfileFromTwitter = function(err, data) {
+
+      if (err) {
+        console.error(err)
+      }
+
+      sendUserJson(data)
 
     } // END function - handleFetchUserProfileFromTwitter
     
-    twitterApiClient.get('/users/show.json', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
+    if (twitterApiClient) {
+      twitterApiClient.get('users/show', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
+    } else {
+      sendUserJson()
+    }
     
   } // END function - handleFindUser
   

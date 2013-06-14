@@ -9,7 +9,7 @@
     "requireindex": "1.0.0",
     "restify": "2.3.5",
     "mongoose": "3.6.8",
-    "twitter": "0.1.x",
+    "twit": "1.1.x",
     "uuid": "1.4.x",
     "sendgrid": "0.2.x"
   },
