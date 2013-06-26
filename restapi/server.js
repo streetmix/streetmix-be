@@ -30,22 +30,24 @@ var loginTokenParser = function(req, res, next) {
   next()
 } // END function - loginTokenParser
 
-var unknownMethodHandler = function(req, res) {
-  if (req.method.toLowerCase() === 'options') {
-    var allowHeaders = ['Accept', 'Accept-Encoding', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization', 'Cache-Control' ]
+var allowCrossDomain = function(req, res, next) {
 
-    if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS')
-    
-    res.header('Access-Control-Allow-Credentials', true)
-    res.header('Access-Control-Allow-Headers', allowHeaders.join(', '))
-    res.header('Access-Control-Allow-Methods', res.methods.join(', '))
-    res.header('Access-Control-Allow-Origin', req.headers.origin)
-    
+  var allowHeaders = ['Accept', 'Accept-Encoding', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization', 'Cache-Control' ]
+  
+  if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS')
+  
+  res.header('Access-Control-Allow-Credentials', true)
+  res.header('Access-Control-Allow-Headers', allowHeaders.join(', '))
+  res.header('Access-Control-Allow-Methods', res.methods.join(', '))
+  res.header('Access-Control-Allow-Origin', req.headers.origin)
+ 
+  if (req.method.toLowerCase() === 'options') {   
     return res.send(204)
+  } else {
+    return next()
   }
-  else
-    return res.send(new restify.MethodNotAllowedError())
-}
+
+} // END function - allowCrossDomain
 
 var customCacheControlHeaders = function(req, res, next) {
   res.header('Pragma', 'no-cache')
@@ -55,11 +57,12 @@ var customCacheControlHeaders = function(req, res, next) {
 } // END function - customCacheControlHeaders
 
 server.on('MethodNotAllowed', requestLog)
-server.on('MethodNotAllowed', unknownMethodHandler)
+server.on('MethodNotAllowed', allowCrossDomain)
 
 server.use(restify.queryParser())
 server.use(restify.bodyParser())
 server.use(restify.CORS())
+server.use(allowCrossDomain)
 server.use(restify.fullResponse())
 server.use(loginTokenParser)
 server.use(requestLog)
