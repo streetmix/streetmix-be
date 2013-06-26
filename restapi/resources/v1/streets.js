@@ -42,6 +42,7 @@ exports.post = function(req, res) {
         return
       }
 
+      req.log.info({ street: streetJson }, 'New street created.')
       res.header('Location', config.restapi.baseuri + '/v1/streets/' + s.id)
       res.send(201, streetJson)
     })

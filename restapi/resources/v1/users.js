@@ -19,8 +19,11 @@ exports.post = function(req, res) {
         res.send(500, 'Could not create user.')
         return
       }
+
+      var userJson = { id: user.id, loginToken: loginToken }
+      req.log.info({ user: userJson }, 'New user created.')
       res.header('Location', config.restapi.baseuri + '/v1/users/' + user.id)
-      res.send(201, { id: user.id, loginToken: loginToken })
+      res.send(201, userJson)
 
     } // END function - handleCreateUser
 
@@ -31,8 +34,12 @@ exports.post = function(req, res) {
         res.send(500, 'Could not update user.')
         return
       }
+
+      var userJson = { id: user.id, loginToken: loginToken }
+      req.log.info({ user: userJson }, 'Existing user issued new login token.')
+
       res.header('Location', config.restapi.baseuri + '/v1/users/' + user.id)
-      res.send(200, { id: user.id, loginToken: loginToken })
+      res.send(200, userJson)
 
     } // END function - handleUpdateUser
 
