@@ -54,7 +54,7 @@ exports.post = function(req, res) {
     text: message
   }, function(success, message) {
     if (!success) {
-      console.error('Error sending email using SendGrid: ' + message)
+      req.log.error('Error sending email using SendGrid: ' + message)
       res.send(500, 'Could not send feedback.')
       return
     }

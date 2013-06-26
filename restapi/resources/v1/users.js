@@ -15,7 +15,7 @@ exports.post = function(req, res) {
 
     var handleCreateUser = function(err, user) {
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not create user.')
         return
       }
@@ -27,7 +27,7 @@ exports.post = function(req, res) {
     var handleUpdateUser = function(err, user) {
       
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not update user.')
         return
       }
@@ -39,7 +39,7 @@ exports.post = function(req, res) {
     var handleFindUser = function(err, user) {
       
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Error finding user with Twitter ID.')
         return
       }
@@ -113,8 +113,8 @@ exports.get = function(req, res) {
           })
         
       } catch (e) {
-        console.error('Could not initialize Twitter API client. Error:')
-        console.error(e)
+        req.log.error('Could not initialize Twitter API client. Error:')
+        req.log.error(e)
       }
     
     var sendUserJson = function(twitterData) {
@@ -123,7 +123,7 @@ exports.get = function(req, res) {
       user.asJson({ auth: auth }, function(err, userJson) {
         
         if (err) {
-          console.error(err)
+          req.log.error(err)
           res.send(500, 'Could not render user JSON.')
           return
         }
@@ -141,7 +141,7 @@ exports.get = function(req, res) {
     var handleFetchUserProfileFromTwitter = function(err, data) {
 
       if (err) {
-        console.error(err)
+        req.log.error(err)
       }
 
       sendUserJson(data)
@@ -172,7 +172,7 @@ exports.delete = function(req, res) {
   var handleSaveUser = function(err, user) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not sign-out user.')
       return
     }
@@ -222,7 +222,7 @@ exports.put = function(req, res) {
   var handleSaveUser = function(err, user) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not update user information.')
       return
     }

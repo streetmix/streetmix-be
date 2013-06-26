@@ -21,5 +21,6 @@ module.exports = {
     feedback_recipient: process.env.EMAIL_FEEDBACK_RECIPIENT || "streetmix@codeforamerica.org",
     feedback_subject: "Streetmix feedback",
     feedback_sender_default: "noreply@codeforamerica.org"
-  }
+  },
+  log_level: 'debug'
 }

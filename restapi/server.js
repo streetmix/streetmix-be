@@ -1,4 +1,5 @@
 var config = require('config'),
+    bunyan = require('bunyan'),
     restify = require('restify'),
     dateformat = require('dateformat'),
     resources = require(__dirname + '/resources'),
@@ -7,7 +8,8 @@ var config = require('config'),
 // Define server
 var server = restify.createServer({
   name: 'streetmix-restapi',
-  version: '0.0.1'
+  version: '0.0.1',
+  log: bunyan.createLogger({name: 'streetmix-restapi', level: config.log_level})
 })
 
 var requestLog = function(req, res, next) {
@@ -19,7 +21,7 @@ var requestLog = function(req, res, next) {
   var body = req.body || ''
   var now = new Date()
   var date = dateformat(now, "m/d/yyyy H:MM:ss Z")
-  console.log('[ %s ] %s %s | %s | %s | %s', date, req.method, req.url, contentType, body, loginToken)
+  req.log.debug({ method: req.method, url: req.url, content_type: contentType, body: body, login_token: loginToken})
   next()
 }
 
@@ -80,5 +82,5 @@ server.post('/v1/feedback', resources.v1.feedback.post)
 
 // Start server
 server.listen(config.restapi.port, function() {
-  console.log('%s listening at %s', server.name, server.url)
+  server.log.info('%s listening at %s', server.name, server.url)
 })

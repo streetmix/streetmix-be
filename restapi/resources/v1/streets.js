@@ -29,7 +29,7 @@ exports.post = function(req, res) {
   
   var handleCreateStreet = function(err, s) {
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not create street.')
       return
     }
@@ -37,7 +37,7 @@ exports.post = function(req, res) {
     s.asJson(function(err, streetJson) {
       
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not render street JSON.')
         return
       }
@@ -50,7 +50,7 @@ exports.post = function(req, res) {
 
   var handleNewStreetNamespacedId = function(err, namespacedId) {
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not create new street ID.')
       return
     }
@@ -131,7 +131,7 @@ exports.delete = function(req, res) {
 
   var handleDeleteStreet = function(err, s) {
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not delete street.')
       return
     }
@@ -143,7 +143,7 @@ exports.delete = function(req, res) {
   var handleFindStreet = function(err, street) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not find street.')
       return
     }
@@ -156,7 +156,7 @@ exports.delete = function(req, res) {
     var handleFindUser = function(err, user) {
 
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not find signed-in user.')
         return
       }
@@ -204,7 +204,7 @@ exports.get = function(req, res) {
   var handleFindStreet = function(err, street) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not find street.')
       return
     }
@@ -222,7 +222,7 @@ exports.get = function(req, res) {
     street.asJson(function(err, streetJson) {
 
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not render street JSON.')
         return
       }
@@ -253,7 +253,7 @@ exports.find = function(req, res) {
   var handleFindStreet = function(err, street) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not find street.')
       return
     }
@@ -271,7 +271,7 @@ exports.find = function(req, res) {
     street.asJson(function(err, streetJson) {
 
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not render street JSON.')
         return
       }
@@ -297,7 +297,7 @@ exports.find = function(req, res) {
   var handleFindStreets = function(err, results) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not find streets.')
       return
     }
@@ -341,7 +341,7 @@ exports.find = function(req, res) {
       function(err, results) {
         
         if (err) {
-          console.error(err)
+          req.log.error(err)
           res.send(500, 'Could not append street.')
           return
         }
@@ -391,7 +391,7 @@ exports.put = function(req, res) {
   var handleUpdateStreet = function(err, street) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not update street.')
       return
     }
@@ -403,7 +403,7 @@ exports.put = function(req, res) {
   var handleFindStreet = function(err, street) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not find street.')
       return
     }
@@ -451,7 +451,7 @@ exports.put = function(req, res) {
     var handleFindUser = function(err, user) {
       
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not find signed-in user.')
         return
       }

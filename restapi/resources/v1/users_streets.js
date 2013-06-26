@@ -10,7 +10,7 @@ exports.get = function(req, res) {
   var handleFindUser = function(err, user) {
 
     if (err) {
-      console.error(err)
+      req.log.error(err)
       res.send(500, 'Could not find user.')
       return
     }
@@ -25,7 +25,7 @@ exports.get = function(req, res) {
     var handleFindStreets = function(err, streets) {
       
       if (err) {
-        console.error(err)
+        req.log.error(err)
         res.send(500, 'Could not find streets for user.')
         return
       }
@@ -36,7 +36,7 @@ exports.get = function(req, res) {
         function(err, results) {
           
           if (err) {
-            console.error(err)
+            req.log.error(err)
             res.send(500, 'Could not append street.')
             return
           }
