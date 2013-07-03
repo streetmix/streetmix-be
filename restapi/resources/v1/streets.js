@@ -426,11 +426,6 @@ exports.put = function(req, res) {
         return
       }
       
-      if (origStreet.status === 'DELETED') {
-        res.send(410, 'Original street not found.')
-        return
-      }
-      
       street.original_street_id = origStreet
       street.save(handleUpdateStreet)
 
