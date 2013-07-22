@@ -1,9 +1,8 @@
 var config = require('config'),
     bunyan = require('bunyan'),
     restify = require('restify'),
-    dateformat = require('dateformat'),
     resources = require(__dirname + '/resources'),
-    util = require(__dirname + '/lib/util.js')
+    requestHandlers = require(__dirname + '/lib/request_handlers')
 
 // Define server
 var server = restify.createServer({
@@ -12,58 +11,16 @@ var server = restify.createServer({
   log: bunyan.createLogger({name: 'streetmix-restapi', level: config.log_level})
 })
 
-var requestLog = function(req, res, next) {
-  var loginToken = ''
-  if (req.params && req.params.loginToken) {
-    loginToken = req.params.loginToken
-  }
-  var contentType = req.headers['content-type'] || ''
-  var body = req.body || ''
-  var now = new Date()
-  var date = dateformat(now, "m/d/yyyy H:MM:ss Z")
-  req.log.debug({ method: req.method, url: req.url, content_type: contentType, body: body, login_token: loginToken})
-  next()
-}
-
-var loginTokenParser = function(req, res, next) {
-  req.params.loginToken = util.parseLoginToken(req)
-  next()
-} // END function - loginTokenParser
-
-var unknownMethodHandler = function(req, res) {
-  if (req.method.toLowerCase() === 'options') {
-    var allowHeaders = ['Accept', 'Accept-Encoding', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization', 'Cache-Control' ]
-
-    if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS')
-    
-    res.header('Access-Control-Allow-Credentials', true)
-    res.header('Access-Control-Allow-Headers', allowHeaders.join(', '))
-    res.header('Access-Control-Allow-Methods', res.methods.join(', '))
-    res.header('Access-Control-Allow-Origin', req.headers.origin)
-    
-    return res.send(204)
-  }
-  else
-    return res.send(new restify.MethodNotAllowedError())
-}
-
-var customCacheControlHeaders = function(req, res, next) {
-  res.header('Pragma', 'no-cache')
-  res.header('Cache-Control', 'no-cache, no-store')
-  res.header('Expires', 0)
-  next()
-} // END function - customCacheControlHeaders
-
-server.on('MethodNotAllowed', requestLog)
-server.on('MethodNotAllowed', unknownMethodHandler)
+server.on('MethodNotAllowed', requestHandlers.request_log)
+server.on('MethodNotAllowed', requestHandlers.unknown_method_handler)
 
 server.use(restify.queryParser())
 server.use(restify.bodyParser())
 server.use(restify.CORS())
 server.use(restify.fullResponse())
-server.use(loginTokenParser)
-server.use(requestLog)
-server.use(customCacheControlHeaders)
+server.use(requestHandlers.login_token_parser)
+server.use(requestHandlers.request_log)
+server.use(requestHandlers.custom_cache_control_headers)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
