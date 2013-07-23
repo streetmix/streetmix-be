@@ -21,6 +21,7 @@ server.use(restify.fullResponse())
 server.use(requestHandlers.login_token_parser)
 server.use(requestHandlers.request_log)
 server.use(requestHandlers.custom_cache_control_headers)
+server.use(requestHandlers.request_id_echo)
 
 // Routes
 server.post('/v1/users', resources.v1.users.post)
