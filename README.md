@@ -28,11 +28,11 @@ Backend code for Streetmix
 
 | Variable name                   | Description                                                                            | Required?          |
 | ------------------------------- | -------------------------------------------------------------------------------------- | ------------------ |
-| =SENDGRID_USERNAME=             | Your SendGrid username                                                                 | Yes                |
-| =SENDGRID_PASSWORD=             | Your SendGrid password                                                                 | Yes                |
-| =TWITTER_OAUTH_CONSUMER_KEY=    | Development Twitter OAuth consumer key, obtained from @streetmixapp Twitter account    | Yes                |
-| =TWITTER_OAUTH_CONSUMER_SECRET= | Development Twitter OAuth consumer secret, obtained from @streetmixapp Twitter account | Yes                |
-| =PORT=                          | HTTP port for REST API server                                                          | No; default = 8080 | 
+| `SENDGRID_USERNAME`             | Your SendGrid username                                                                 | Yes                |
+| `SENDGRID_PASSWORD`             | Your SendGrid password                                                                 | Yes                |
+| `TWITTER_OAUTH_CONSUMER_KEY`    | Development Twitter OAuth consumer key, obtained from @streetmixapp Twitter account    | Yes                |
+| `TWITTER_OAUTH_CONSUMER_SECRET` | Development Twitter OAuth consumer secret, obtained from @streetmixapp Twitter account | Yes                |
+| `PORT`                          | HTTP port for REST API server                                                          | No; default ` 8080 | 
 
 2) Start the REST API server.
 
