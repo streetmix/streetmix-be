@@ -1,2 +1,2 @@
-web: node restapi/server.js
+web: npm start
 
