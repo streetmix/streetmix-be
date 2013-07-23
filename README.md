@@ -37,7 +37,7 @@ Backend code for Streetmix
 2) Start the REST API server.
 
     cd $PROJECT_ROOT
-    node restapi/server.js
+    npm start
 
 ### Project folder structure
 
