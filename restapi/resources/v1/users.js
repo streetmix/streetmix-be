@@ -147,6 +147,7 @@ exports.get = function(req, res) {
 
     var handleFetchUserProfileFromTwitter = function(err, data) {
 
+      req.log.debug('Twitter API client users/show call returned')
       if (err) {
         req.log.error(err)
       }
@@ -156,6 +157,7 @@ exports.get = function(req, res) {
     } // END function - handleFetchUserProfileFromTwitter
     
     if (twitterApiClient) {
+      req.log.debug('About to call Twitter API client users/show')
       twitterApiClient.get('users/show', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
     } else {
       sendUserJson()
