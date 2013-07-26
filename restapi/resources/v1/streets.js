@@ -13,12 +13,9 @@ exports.post = function(req, res) {
   street.id = uuid.v1()
 
   var request_ip = function(req) {
-    console.log(req.headers)
     if (req.headers['x-forwarded-for'] !== undefined) {
-      console.log("using x-forwarded-for header for IP address")
-      return req.headers['x-forwarded-for']
+      return req.headers['x-forwarded-for'].split(", ")[0]
     } else {
-      console.log("using connection IP address")
       return req.connection.remoteAddress
     }
   }
