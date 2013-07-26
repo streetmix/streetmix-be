@@ -1,10 +1,8 @@
 var config = require('config'),
     bunyan = require('bunyan'),
     restify = require('restify'),
-    CronJob = require('cron').CronJob,
     resources = require(__dirname + '/resources'),
-    requestHandlers = require(__dirname + '/lib/request_handlers'),
-    reportDbStats = require(__dirname + '/../lib/report_db_stats')
+    requestHandlers = require(__dirname + '/lib/request_handlers')
 
 // Define server
 var server = restify.createServer({
@@ -44,15 +42,3 @@ server.post('/v1/feedback', resources.v1.feedback.post)
 server.listen(config.restapi.port, function() {
   server.log.info('%s listening at %s', server.name, server.url)
 })
-
-// Crons
-
-if (process.env.NODE_ENV == 'production') {
-
-  // Check DB stats every 25 seconds and report only IF levels are warning or critical
-  new CronJob('*/25 * * * * *', reportDbStats(), null, true)
-
-  // Check DB stats every 4 hours and report regardless of level.
-  new CronJob('17 23 */4 * * *', reportDbStats(true), null, true)
-
-}
