@@ -14,9 +14,9 @@ exports.post = function(req, res) {
 
   var request_ip = function(req) {
     console.log(req.headers)
-    if (req.headers['X-Forwarded-For'] !== undefined) {
+    if (req.headers['x-forwarded-for'] !== undefined) {
       console.log("using x-forwarded-for header for IP address")
-      return req.headers['X-Forwarded-For']
+      return req.headers['x-forwarded-for']
     } else {
       console.log("using connection IP address")
       return req.connection.remoteAddress
