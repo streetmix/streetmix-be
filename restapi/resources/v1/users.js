@@ -126,6 +126,8 @@ exports.get = function(req, res) {
     
     var sendUserJson = function(twitterData) {
 
+      req.log.debug({ twitterData: twitterData }, 'In sendUserJson')
+
       var auth = (user.login_tokens.indexOf(req.params.loginToken) > 0)
       user.asJson({ auth: auth }, function(err, userJson) {
         
