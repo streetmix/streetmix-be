@@ -1,3 +1,5 @@
+var restify = require('restify')
+
 module.exports = function(req, res) {
   if (req.method.toLowerCase() === 'options') {
     var allowHeaders = ['Accept', 'Accept-Encoding', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'Authorization', 'Cache-Control' ]
