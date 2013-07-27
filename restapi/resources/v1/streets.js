@@ -12,6 +12,14 @@ exports.post = function(req, res) {
   var street = new Street()
   street.id = uuid.v1()
 
+  var request_ip = function(req) {
+    if (req.headers['x-forwarded-for'] !== undefined) {
+      return req.headers['x-forwarded-for'].split(", ")[0]
+    } else {
+      return req.connection.remoteAddress
+    }
+  }
+
   var body
   if (req.body && (req.body.length > 0)) {
     try {
@@ -25,6 +33,7 @@ exports.post = function(req, res) {
     
     street.name = body.name
     street.data = body.data
+    street.creator_ip = request_ip(req)
   }
   
   var handleCreateStreet = function(err, s) {
