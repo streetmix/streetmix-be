@@ -9,6 +9,7 @@
     "dateformat": "1.0.x",
     "requireindex": "1.0.0",
     "restify": "2.3.5",
+    "strong-agent": "latest",
     "mongoose": "3.6.8",
     "twit": "1.1.x",
     "uuid": "1.4.x",

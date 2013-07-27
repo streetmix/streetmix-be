@@ -1,3 +1,9 @@
+require('strong-agent').profile(
+  '23e668d1a3e634169754d51367ea4aff',
+  ['Streetmix REST API','Heroku'],
+  null
+)
+
 var config = require('config'),
     bunyan = require('bunyan'),
     restify = require('restify'),
