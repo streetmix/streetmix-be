@@ -11,7 +11,7 @@
     "restify": "2.3.5",
     "strong-agent": "latest",
     "mongoose": "3.6.8",
-    "twit": "1.1.x",
+    "twitter": "0.2.x",
     "uuid": "1.4.x",
     "sendgrid": "0.2.x"
   },

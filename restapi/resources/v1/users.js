@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     config = require('config'),
     uuid = require('uuid'),
-    twitter = require('twit'),
+    twitter = require('twitter'),
     db = require('../../../lib/db.js'),
     User = require('../../../models/user.js')
 
@@ -115,7 +115,7 @@ exports.get = function(req, res) {
           twitterApiClient = new twitter({
             consumer_key: config.twitter.oauth_consumer_key,
             consumer_secret: config.twitter.oauth_consumer_secret,
-            access_token: user.twitter_credentials.access_token_key,
+            access_token_key: user.twitter_credentials.access_token_key,
             access_token_secret: user.twitter_credentials.access_token_secret
           })
         
@@ -125,8 +125,6 @@ exports.get = function(req, res) {
       }
     
     var sendUserJson = function(twitterData) {
-
-      req.log.debug({ twitterData: twitterData }, 'In sendUserJson')
 
       var auth = (user.login_tokens.indexOf(req.params.loginToken) > 0)
       user.asJson({ auth: auth }, function(err, userJson) {
@@ -147,11 +145,11 @@ exports.get = function(req, res) {
 
     } // END function - sendUserJson
 
-    var handleFetchUserProfileFromTwitter = function(err, data) {
+    var handleFetchUserProfileFromTwitter = function(data) {
 
-      req.log.debug({ err: err, data: data }, 'Twitter API client users/show call returned.')
-      if (err) {
-          req.log.error(err, 'Twitter API client users/show call returned error.')
+      req.log.debug({ profile_image_url: data.profile_image_url }, 'Twitter API users/show call returned.')
+      if (!data) {
+          req.log.error('Twitter API call users/show did not return any data.')
       }
 
       sendUserJson(data)
@@ -159,8 +157,8 @@ exports.get = function(req, res) {
     } // END function - handleFetchUserProfileFromTwitter
     
     if (twitterApiClient) {
-      req.log.debug('About to call Twitter API client users/show')
-      twitterApiClient.get('users/show', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
+      req.log.debug('About to call Twitter API: /users/show.json?user_id=' + user.twitter_id)
+      twitterApiClient.get('/users/show.json', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
     } else {
       sendUserJson()
     }
