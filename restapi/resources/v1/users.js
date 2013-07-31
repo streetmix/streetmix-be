@@ -102,7 +102,7 @@ exports.post = function(req, res) {
 
 exports.get = function(req, res) {
 
-  var handleFindUser = function(err, user) {
+  var handleFindUserById = function(err, user) {
    
     if (!user) {
       res.send(404, 'User not found.')
@@ -181,7 +181,7 @@ exports.get = function(req, res) {
       sendUserJson()
     }
     
-  } // END function - handleFindUser
+  } // END function - handleFindUserById
   
   // Flag error if user ID is not provided
   if (!req.params.user_id) {
@@ -190,7 +190,23 @@ exports.get = function(req, res) {
   }
 
   var userId = req.params.user_id
-  User.findOne({ id: userId }, handleFindUser)
+
+  var handleFindUserByLoginToken = function(err, user) {
+
+    if (!user) {
+      res.send(401, 'User with that login token not found.')
+      return
+    }
+    
+    User.findOne({ id: userId }, handleFindUserById)
+
+  } // END function - handleFindUserByLoginToken
+
+  if (req.params.loginToken) {
+    User.findOne({ login_tokens: { $in: [ req.params.loginToken ] } }, handleFindUserByLoginToken)
+  } else {
+    User.findOne({ id: userId }, handleFindUserById)
+  }
 
 } // END function - exports.get
 
