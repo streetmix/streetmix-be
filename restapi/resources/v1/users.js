@@ -145,20 +145,38 @@ exports.get = function(req, res) {
 
     } // END function - sendUserJson
 
+    var responseAlreadySent = false
     var handleFetchUserProfileFromTwitter = function(data) {
 
-      req.log.debug({ profile_image_url: data.profile_image_url }, 'Twitter API users/show call returned.')
-      if (!data) {
-          req.log.error('Twitter API call users/show did not return any data.')
-      }
+      if (responseAlreadySent) {
+        req.log.debug({ profile_image_url: data.profile_image_url }, 'Twitter API users/show call returned but response already sent!')
+      } else {
 
-      sendUserJson(data)
+        req.log.debug({ profile_image_url: data.profile_image_url }, 'Twitter API users/show call returned. Sending response with Twitter data.')
+        responseAlreadySent = true
+
+        if (!data) {
+          req.log.error('Twitter API call users/show did not return any data.')
+        }
+
+        sendUserJson(data)
+
+      }
 
     } // END function - handleFetchUserProfileFromTwitter
     
     if (twitterApiClient) {
       req.log.debug('About to call Twitter API: /users/show.json?user_id=' + user.twitter_id)
       twitterApiClient.get('/users/show.json', { user_id: user.twitter_id }, handleFetchUserProfileFromTwitter)
+      setTimeout(
+        function() {
+          if (!responseAlreadySent) {
+              req.log.debug('Timing out Twitter API call after %d milliseconds and sending partial response.', config.twitter.timeout_ms)
+              responseAlreadySent = true
+              sendUserJson()
+          }
+        },
+        config.twitter.timeout_ms)
     } else {
       sendUserJson()
     }

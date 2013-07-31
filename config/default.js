@@ -11,7 +11,8 @@ module.exports = {
   },
   twitter: {
     oauth_consumer_key: process.env.TWITTER_OAUTH_CONSUMER_KEY,
-    oauth_consumer_secret: process.env.TWITTER_OAUTH_CONSUMER_SECRET
+    oauth_consumer_secret: process.env.TWITTER_OAUTH_CONSUMER_SECRET,
+    timeout_ms: 500
   },
   email: {
     sendgrid: {
