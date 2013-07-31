@@ -120,7 +120,7 @@ exports.post = function(req, res) {
   var handleFindUser = function(err, user) {
 
     if (!user) {
-      res.send(404, 'Creator not found.')
+      res.send(401, 'User with that login token not found.')
       return
     }
     
