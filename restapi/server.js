@@ -4,11 +4,13 @@ require('strong-agent').profile(
   null
 )
 
-var config = require('config'),
+var config = require('config'),   
     bunyan = require('bunyan'),
     restify = require('restify'),
+    CronJob = require('cron').CronJob,
     resources = require(__dirname + '/resources'),
-    requestHandlers = require(__dirname + '/lib/request_handlers')
+    requestHandlers = require(__dirname + '/lib/request_handlers'),
+    cronJobs = require(__dirname + '/../lib/cron_jobs')
 
 // Define server
 var server = restify.createServer({
@@ -48,3 +50,6 @@ server.post('/v1/feedback', resources.v1.feedback.post)
 server.listen(config.restapi.port, function() {
   server.log.info('%s listening at %s', server.name, server.url)
 })
+
+// Crons (being run from this code to save dyno costs on Heroku)
+new CronJob('23 17 9,18 * * *', cronJobs.email_heroku_db_stats, null, true)

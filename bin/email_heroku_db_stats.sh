@@ -67,7 +67,8 @@ let db_storage_size_bytes=$(query "db.stats().storageSize")
 db_storage_size_mb=$(echo "scale=2; $db_storage_size_bytes/(1000 * 1000)" | bc)
 db_storage_utilization_percent=$(echo "scale=2; $db_storage_size_bytes*100/(512*1000*1000)" | bc)
 
-cat <<EOF 
+subject="Database stats for $heroku_app_name"
+body="$(cat <<EOF 
 
 # of users = $number_of_users
 # of streets = $number_of_streets
@@ -76,3 +77,15 @@ DB storage size (MB) = $db_storage_size_mb
 DB storage utlization = $db_storage_utilization_percent%
 
 EOF
+)
+"
+
+subject=${subject// /%20}
+body=${body// /%20}
+body=${body//$'\n'/%0D%0A}
+body=${body//=/%3D}
+body=${body//#/%23}
+
+curlCall="https://sendgrid.com/api/mail.send.json?api_user=$SENDGRID_USERNAME&api_key=$SENDGRID_PASSWORD&to=shaunak@codeforamerica.org&from=shaunak@codeforamerica.org&subject=$subject&text=$body"
+
+curl -s "$curlCall" >/dev/null

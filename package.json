@@ -6,6 +6,7 @@
     "async": "0.2.x",
     "bunyan": "0.21.x",
     "config": "0.4.22",
+    "cron": "1.0.x",
     "dateformat": "1.0.x",
     "requireindex": "1.0.0",
     "restify": "2.3.5",
