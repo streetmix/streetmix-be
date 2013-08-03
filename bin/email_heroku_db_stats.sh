@@ -73,8 +73,8 @@ body="$(cat <<EOF
 # of users = $number_of_users
 # of streets = $number_of_streets
 # of default streets = $number_of_default_streets
-DB storage size (MB) = $db_storage_size_mb
-DB storage utlization = $db_storage_utilization_percent%
+DB storage size = $db_storage_size_mb MB
+DB storage utilization = $db_storage_utilization_percent%
 
 EOF
 )
