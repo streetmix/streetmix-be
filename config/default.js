@@ -21,7 +21,10 @@ module.exports = {
     },
     feedback_recipient: process.env.EMAIL_FEEDBACK_RECIPIENT || "streetmix@codeforamerica.org",
     feedback_subject: "Streetmix feedback",
-    feedback_sender_default: "noreply@codeforamerica.org"
+    feedback_sender_default: "noreply@codeforamerica.org",
+    db_stats_recipient: "shaunak@codeforamerica.org",
+    db_stats_subject: "Database statistics for " + process.env.NODE_ENV + " environment",
+    db_stats_sender_default: "noreply@codeforamerica.org"
   },
   log_level: 'debug'
 }
