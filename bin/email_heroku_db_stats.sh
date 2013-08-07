@@ -3,7 +3,7 @@
 # Report will contain:
 # 1. # of users.
 # 2. # of streets.
-# 3. # of default streets (undoStack.length == 0).
+# [DISABLED] 3. # of default streets (undoStack.length == 0).
 # 4. DB storage size in MB.
 # 5. DB storage utilization in %.
 
@@ -61,18 +61,17 @@ log_debug "mongo_host_port_db = $mongo_host_port_db"
 
 let number_of_users=$(query "db.users.count()")
 let number_of_streets=$(query "db.streets.count()")
-let number_of_default_streets=$(query "db.streets.count({ \"data.undoStack\" : { \$size: 0 }})")
+# let number_of_default_streets=$(query "db.streets.count({ \"data.undoStack\" : { \$size: 0 }})")
 let db_storage_size_bytes=$(query "db.stats().storageSize")
 
 db_storage_size_mb=$(echo "scale=5; $db_storage_size_bytes/(1000 * 1000)" | bc)
-db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(512*1000*1000)" | bc)
+db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(50*1000*1000*1000)" | bc)
 
 subject="Database stats for $heroku_app_name"
 body="$(cat <<EOF 
 
 # of users = $number_of_users
 # of streets = $number_of_streets
-# of default streets = $number_of_default_streets
 DB storage size = $db_storage_size_mb MB
 DB storage utilization = $db_storage_utilization_percent%
 
@@ -88,4 +87,4 @@ body=${body//#/%23}
 
 curlCall="https://sendgrid.com/api/mail.send.json?api_user=$SENDGRID_USERNAME&api_key=$SENDGRID_PASSWORD&to=shaunak@codeforamerica.org&from=shaunak@codeforamerica.org&subject=$subject&text=$body"
 
-curl -s "$curlCall" >/dev/null
+curl -s "$curlCall" # >/dev/null
