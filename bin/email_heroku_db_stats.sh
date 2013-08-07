@@ -65,7 +65,7 @@ let number_of_streets=$(query "db.streets.count()")
 let db_storage_size_bytes=$(query "db.stats().storageSize")
 
 db_storage_size_mb=$(echo "scale=5; $db_storage_size_bytes/(1000 * 1000)" | bc)
-db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(50*1000*1000*1000)" | bc)
+db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(5*1000*1000*1000)" | bc)
 
 subject="Database stats for $heroku_app_name"
 body="$(cat <<EOF 
