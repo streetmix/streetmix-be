@@ -41,6 +41,7 @@ server.get('/v1/users/:user_id/streets', resources.v1.users_streets.get)
 server.post('/v1/streets', resources.v1.streets.post)
 server.get('/v1/streets', resources.v1.streets.find)
 server.del('/v1/streets/:street_id', resources.v1.streets.delete)
+server.head('/v1/streets/:street_id', resources.v1.streets.head)
 server.get('/v1/streets/:street_id', resources.v1.streets.get)
 server.put('/v1/streets/:street_id', resources.v1.streets.put)
 
