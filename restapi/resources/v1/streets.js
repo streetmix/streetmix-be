@@ -209,40 +209,6 @@ exports.delete = function(req, res) {
   
 } // END function - exports.delete
 
-exports.head = function(req, res) {
-
-  var handleFindStreet = function(err, street) {
-
-    if (err) {
-      req.log.error(err)
-      res.send(500, 'Could not find street.')
-      return
-    }
-
-    if (!street) {
-      res.send(404, 'Could not find street.')
-      return
-    }
-
-    if (street.status === 'DELETED') {
-      res.send(410, 'Could not find street.')
-      return
-    }
-
-    res.header('Last-Modified', street.updated_at)
-    res.send(204)
-    
-  } // END function - handleFindStreet
-
-  if (!req.params.street_id) {
-    res.send(400, 'Please provide street ID.')
-    return
-  }
-
-  Street.findOne({ id: req.params.street_id }, handleFindStreet)
-
-} // END function - exports.head
-
 exports.get = function(req, res) {
 
   var handleFindStreet = function(err, street) {
@@ -263,6 +229,12 @@ exports.get = function(req, res) {
       return
     }
 
+    res.header('Last-Modified', street.updated_at)
+    if (req.method == 'HEAD') {
+      res.send(204)
+      return
+    }
+
     street.asJson(function(err, streetJson) {
 
       if (err) {
@@ -271,7 +243,6 @@ exports.get = function(req, res) {
         return
       }
 
-      res.header('Last-Modified', street.updated_at)
       res.header('Location', config.restapi.baseuri + '/v1/streets/' + street.id)
       res.send(200, streetJson)
 
@@ -313,18 +284,9 @@ exports.find = function(req, res) {
       return
     }
 
-    street.asJson(function(err, streetJson) {
-
-      if (err) {
-        req.log.error(err)
-        res.send(500, 'Could not render street JSON.')
-        return
-      }
-
-      res.header('Location', config.restapi.baseuri + '/v1/streets/' + street.id)
-      res.send(307)
-
-    })
+    res.header('Location', config.restapi.baseuri + '/v1/streets/' + street.id)
+    res.header('Content-Length', 0)
+    res.send(307)
     
   } // END function - handleFindStreet
   
