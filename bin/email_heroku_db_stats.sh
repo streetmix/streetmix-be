@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Report will contain:
-# 1. # of users.
+# 1. # of registerd users.
 # 2. # of streets.
 # [DISABLED] 3. # of default streets (undoStack.length == 0).
 # 4. DB storage size in MB.
@@ -70,7 +70,7 @@ db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(5*10
 subject="Database stats for $heroku_app_name"
 body="$(cat <<EOF 
 
-# of users = $number_of_users
+# of registered users = $number_of_users
 # of streets = $number_of_streets
 DB storage size = $db_storage_size_mb MB
 DB storage utilization = $db_storage_utilization_percent%
