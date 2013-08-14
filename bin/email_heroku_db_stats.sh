@@ -53,7 +53,7 @@ cd mongo*/bin
 MONGO_PATH=./mongo
 
 mongo_url=$(env | grep MONGOHQ_URL)
-environment=$(env | grep NODE_ENV)
+environment=$(env | grep NODE_ENV | awk -F= '{print $2}')
 
 mongo_username=$(echo "$mongo_url" | awk -F':' '{print $2}' | awk -F'/' '{print $3}')
 mongo_password=$(echo "$mongo_url" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
@@ -68,8 +68,8 @@ let number_of_streets=$(query "db.streets.count()")
 # let number_of_default_streets=$(query "db.streets.count({ \"data.undoStack\" : { \$size: 0 }})")
 let db_storage_size_bytes=$(query "db.stats().storageSize")
 
-db_storage_size_mb=$(echo "scale=5; $db_storage_size_bytes/(1000 * 1000)" | bc)
-db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(5*1000*1000*1000)" | bc)
+db_storage_size_mb=$(node -pe "$db_storage_size_bytes/(1000 * 1000)")
+db_storage_utilization_percent=$(node -pe "$db_storage_size_bytes*100/(5*1000*1000*1000)")
 
 subject="Database stats for $environment"
 body="$(cat <<EOF 
