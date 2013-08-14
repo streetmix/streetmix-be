@@ -20,7 +20,7 @@ function log_error { if [ $LOG_LEVEL -le $LOG_LEVEL_ERROR ]; then printf "[ERROR
 
 function query {
 
-  mongo \
+  $MONGO_PATH \
     --quiet \
     --username $mongo_username \
     --password $mongo_password \
@@ -44,12 +44,16 @@ case $LOG_LEVEL in
         ;;
 esac
 
-heroku_app_name=$1
-if [ -z "$heroku_app_name" ]; then
-    heroku_app_name="streetmix-api-v2"
-fi
+# Download MongoDB binaries if necessary
 
-mongo_url=$(heroku config:get MONGOHQ_URL --app $heroku_app_name)
+cd /tmp
+curl --silent --output mongo.tgz 'http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.4.5.tgz'
+tar xzf mongo.tgz
+cd mongo*/bin
+MONGO_PATH=./mongo
+
+mongo_url=$(env | grep MONGOHQ_URL)
+environment=$(env | grep NODE_ENV)
 
 mongo_username=$(echo "$mongo_url" | awk -F':' '{print $2}' | awk -F'/' '{print $3}')
 mongo_password=$(echo "$mongo_url" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
@@ -67,7 +71,7 @@ let db_storage_size_bytes=$(query "db.stats().storageSize")
 db_storage_size_mb=$(echo "scale=5; $db_storage_size_bytes/(1000 * 1000)" | bc)
 db_storage_utilization_percent=$(echo "scale=5; $db_storage_size_bytes*100/(5*1000*1000*1000)" | bc)
 
-subject="Database stats for $heroku_app_name"
+subject="Database stats for $environment"
 body="$(cat <<EOF 
 
 # of registered users = $number_of_users
