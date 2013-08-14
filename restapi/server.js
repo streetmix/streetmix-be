@@ -47,6 +47,8 @@ server.head('/v1/streets/:street_id', resources.v1.streets.get)
 server.get('/v1/streets/:street_id', resources.v1.streets.get)
 server.put('/v1/streets/:street_id', resources.v1.streets.put)
 
+server.get('/v1/streets/:street_id/updates', resources.v1.streets_updates.get)
+
 server.post('/v1/feedback', resources.v1.feedback.post)
 
 // Start server

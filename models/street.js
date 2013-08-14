@@ -26,16 +26,6 @@ streetSchema.pre('save', function(next) {
   next()
 })
 
-streetSchema.post('save', function(next) {
-
-  var StreetUpdate = require('./street_update.js')
-
-  var streetUpdate = new StreetUpdate()
-  streetUpdate.street_id = this._id
-  streetUpdate.updated_at = this.updated_at
-  streetUpdate.save(next)
-})
-
 streetSchema.methods.asJson = function(cb) {
 
   var json = {
