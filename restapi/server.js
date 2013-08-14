@@ -55,4 +55,4 @@ server.listen(config.restapi.port, function() {
 })
 
 // Crons (being run from this code to save dyno costs on Heroku)
-new CronJob('23 03 * * * *', cronJobs.email_heroku_db_stats, null, true)
+new CronJob('23 07 * * * *', cronJobs.email_heroku_db_stats, null, true)
