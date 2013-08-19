@@ -7,7 +7,6 @@ require('strong-agent').profile(
 var config = require('config'),   
     bunyan = require('bunyan'),
     restify = require('restify'),
-    CronJob = require('cron').CronJob,
     resources = require(__dirname + '/resources'),
     requestHandlers = require(__dirname + '/lib/request_handlers'),
     cronJobs = require(__dirname + '/../lib/cron_jobs')
@@ -53,6 +52,3 @@ server.post('/v1/feedback', resources.v1.feedback.post)
 server.listen(config.restapi.port, function() {
   server.log.info('%s listening at %s', server.name, server.url)
 })
-
-// Crons (being run from this code to save dyno costs on Heroku)
-new CronJob('23 07 */2 * * *', cronJobs.system_command(__dirname + "/../bin/email_heroku_db_stats.sh"), null, true)
