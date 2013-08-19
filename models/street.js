@@ -9,8 +9,8 @@ var streetSchema = new mongoose.Schema({
   name: String,
   creator_id: { type: mongoose.Schema.ObjectId, ref: mongoose.model('User')},
   data: mongoose.Schema.Types.Mixed,
-  created_at: Date,
-  updated_at: Date,
+  created_at: { type: Date, index: true },
+  updated_at: { type: Date, index: true },
   creator_ip: String
 })
 
