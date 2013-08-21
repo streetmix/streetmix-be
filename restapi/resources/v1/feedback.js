@@ -1,5 +1,6 @@
 var config = require('config'),
-    SendGrid = require('sendgrid').SendGrid
+    SendGrid = require('sendgrid').SendGrid,
+    validator = require('validator')
 
 exports.post = function(req, res) {
 
@@ -25,16 +26,18 @@ exports.post = function(req, res) {
   message += "\n\n"
     + "-- \n"
     + "URL: " + referer + "\n"
-    + additionalInformation + "\n"
+    + additionalInformation
 
   var to = [ config.email.feedback_recipient ]
   var from
   if (body.from) {
-    var matches = body.from.match(/\w+@\w+\.\w+/)
-    if (matches && (matches.length > 0)) {
-      from = matches[0]
-      to.push(from)
-    }
+    try {
+      validator.check(body.from).isEmail()
+      to.push(body.from)
+    } catch (e) {
+      message += "\n"
+        + "Invalid from email address specified: " + body.from + "\n"
+    } 
   }
       
   var sendgrid = new SendGrid(

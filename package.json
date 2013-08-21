@@ -13,7 +13,8 @@
     "mongoose": "3.6.8",
     "twitter": "0.2.x",
     "uuid": "1.4.x",
-    "sendgrid": "0.2.x"
+    "sendgrid": "0.2.x",
+    "validator": "1.5.x"
   },
   "engines": {
     "node": "0.10.x",
