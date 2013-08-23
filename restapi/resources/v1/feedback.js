@@ -33,6 +33,7 @@ exports.post = function(req, res) {
   if (body.from) {
     try {
       validator.check(body.from).isEmail()
+      from = body.from
       to.push(body.from)
     } catch (e) {
       message += "\n"
