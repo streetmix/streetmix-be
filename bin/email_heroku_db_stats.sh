@@ -11,8 +11,7 @@
 let LOG_LEVEL_DEBUG=10
 let LOG_LEVEL_INFO=20
 let LOG_LEVEL_ERROR=30
-MONGO_CLI_DOWNLOAD_LOCATION="http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.4.5.tgz"
-
+MONGO_CLI_DOWNLOAD_LOCATION="https://s3.amazonaws.com/forever.codeforamerica.org/streetmix/mongodb-linux-x86_64-2.4.5.tgz"
 # Functions
 
 function log_debug { if [ $LOG_LEVEL -le $LOG_LEVEL_DEBUG ]; then printf "[DEBUG] %s\n" "$@"; fi; }
