@@ -19,6 +19,9 @@ exports.post = function(req, res) {
   }
   var message = body.message.trim()
 
+  // Log feedback
+  req.log.info(body, 'Feedback received.')
+
   // Append useful information to message
   var referer = req.headers.referer || '(not specified)'
   var additionalInformation = body.additionalInformation || ''
