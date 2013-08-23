@@ -11,6 +11,7 @@
 let LOG_LEVEL_DEBUG=10
 let LOG_LEVEL_INFO=20
 let LOG_LEVEL_ERROR=30
+MONGO_CLI_DOWNLOAD_LOCATION="http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.4.5.tgz"
 
 # Functions
 
@@ -47,7 +48,7 @@ esac
 # Download MongoDB binaries if necessary
 
 cd /tmp
-curl --silent --output mongo.tgz 'http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.4.5.tgz'
+curl --silent --output mongo.tgz $MONGO_CLI_DOWNLOAD_LOCATION
 tar xzf mongo.tgz
 cd mongo*/bin
 MONGO_PATH=./mongo
