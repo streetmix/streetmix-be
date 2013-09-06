@@ -6,11 +6,19 @@ Backend code for Streetmix
 
 1) Download and install [Node.js](http://nodejs.org/).
 
+    brew install nodejs
+
 2) Download, install and start [MongoDB](http://www.mongodb.org/).
 
-3) Clone this repository to a folder on your computer. The rest of this document will refer to this folder as `$PROJECT_ROOT`.
+    brew install mongodb
 
-4) Install project dependencies.
+3) Download and install [Coreutils](http://www.gnu.org/software/coreutils/).
+
+    brew install coreutils
+
+4) Clone this repository to a folder on your computer. The rest of this document will refer to this folder as `$PROJECT_ROOT`.
+
+5) Install project dependencies.
 
     cd $PROJECT_ROOT
     npm install
