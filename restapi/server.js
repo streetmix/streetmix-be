@@ -48,6 +48,8 @@ server.put('/v1/streets/:street_id', resources.v1.streets.put)
 
 server.post('/v1/feedback', resources.v1.feedback.post)
 
+server.get('/.well-known/status', resources.well_known_status.get)
+
 // Start server
 server.listen(config.restapi.port, function() {
   server.log.info('%s listening at %s', server.name, server.url)
