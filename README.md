@@ -1,3 +1,6 @@
+[![Dependency Status](https://david-dm.org/codeforamerica/streetmix-be.svg)](https://david-dm.org/codeforamerica/streetmix-be)
+[![Code Climate](https://codeclimate.com/github/codeforamerica/streetmix-be.png)](https://codeclimate.com/github/codeforamerica/streetmix-be)
+
 Backend code for Streetmix
 
 ## Development setup (on Mac OS X 10.8)
