@@ -1,3 +1,5 @@
+***DEPRECATION WARNING: This code has been [merged](https://github.com/codeforamerica/streetmix/pull/442) with Streetmix's front-end code. All current code lives in the [codeforamerica/streetmix](https://github.com/codeforamerica/streetmix) repo.***
+
 [![Dependency Status](https://david-dm.org/codeforamerica/streetmix-be.svg)](https://david-dm.org/codeforamerica/streetmix-be)
 [![Code Climate](https://codeclimate.com/github/codeforamerica/streetmix-be.png)](https://codeclimate.com/github/codeforamerica/streetmix-be)
 
